@@ -13,7 +13,7 @@ export function initLazyVideo(
   const video = document.getElementById(videoId) as HTMLVideoElement;
   if (!video || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  const isMobile = window.innerWidth < 768;
+  const isMobile = window.matchMedia('(max-width: 767px)').matches;
   const webm = isMobile ? webmSrc.replace('.webm', '-mobile.webm') : webmSrc;
   const mp4 = isMobile ? mp4Src.replace('.mp4', '-mobile.mp4') : mp4Src;
 
