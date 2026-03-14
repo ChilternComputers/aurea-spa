@@ -1,0 +1,53 @@
+---
+
+---
+
+<!-- About: Cinematic video section with minimal text -->
+<section style="position: relative; padding: clamp(100px, 14vw, 200px) 0; overflow: hidden;" aria-label="About AUREA">
+  <!-- Video background — essential oil being poured -->
+  <div style="position: absolute; inset: 0; z-index: 0;">
+    <video
+      autoplay muted loop playsinline preload="metadata"
+      style="width: 100%; height: 100%; object-fit: cover;"
+      aria-hidden="true"
+    >
+      <source src="https://assets.mixkit.co/videos/52147/52147-720.mp4" type="video/mp4" />
+    </video>
+    <img
+      src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=1920&q=85&fit=crop&auto=format"
+      alt=""
+      role="presentation"
+      loading="lazy"
+      decoding="async"
+      style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none;"
+      data-video-fallback
+    />
+    <div style="position: absolute; inset: 0; background: rgba(10, 10, 10, 0.6);"></div>
+  </div>
+
+  <!-- Content -->
+  <div style="position: relative; z-index: 1; max-width: 700px; margin: 0 auto; text-align: center; padding: 0 24px;" data-reveal>
+    <span
+      class="eyebrow"
+      style="display: block; margin-bottom: 20px; color: rgba(197, 165, 114, 0.85); text-shadow: 0 1px 6px rgba(0,0,0,0.3);"
+    >
+      Our Philosophy
+    </span>
+
+    <h2 style="margin: 0 0 28px; color: #FFFFFF; text-shadow: 0 2px 16px rgba(0,0,0,0.4);">
+      Beauty as a<br>Form of Care
+    </h2>
+
+    <p style="font-size: clamp(1rem, 1.5vw, 1.15rem); line-height: 1.9; color: rgba(255,255,255,0.85); margin-bottom: 48px; text-shadow: 0 1px 6px rgba(0,0,0,0.3); font-weight: 300;">
+      Expert artistry meets genuine restoration. A space designed to slow you down — where every detail, every moment, is considered.
+    </p>
+
+    <a
+      href="/about/"
+      class="btn-primary"
+      style="padding: 14px 40px; background: transparent; border: 1px solid rgba(255,255,255,0.4); color: #FFFFFF;"
+    >
+      Our Story
+    </a>
+  </div>
+</section>

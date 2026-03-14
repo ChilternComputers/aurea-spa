@@ -1,0 +1,53 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHero from '@/components/sections/PageHero.astro';
+import VoucherCard from '@/components/ui/VoucherCard.astro';
+import { vouchers } from '@/data/gift-vouchers';
+import { getWebPageSchema } from '@/lib/schemas';
+---
+
+<Layout
+  title="Gift Vouchers"
+  description="Give the gift of AUREA. Choose from four beautifully presented voucher tiers for spa treatments, hair styling, and wellness experiences."
+  schema={getWebPageSchema({
+    title: 'Gift Vouchers — AUREA',
+    description: 'Luxury gift vouchers for spa and beauty treatments.',
+    url: 'https://aurea-spa.pages.dev/gift-vouchers/',
+  })}
+>
+  <PageHero
+    title="Gift Vouchers"
+    subtitle="The Gift of AUREA"
+    description="A thoughtful, beautiful gift for someone who deserves a moment of restoration."
+    image="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=1920&q=85&fit=crop&auto=format"
+  />
+
+  <section style="padding: clamp(60px, 8vw, 100px) 0;">
+    <div style="max-width: 1100px; margin: 0 auto; padding: 0 clamp(24px, 4vw, 48px);">
+      <div
+        style="display: grid; grid-template-columns: 1fr; gap: 24px;"
+        class="md:grid-cols-2 lg:grid-cols-4"
+        data-stagger-parent
+      >
+        {vouchers.map((v) => (
+          <VoucherCard
+            name={v.name}
+            price={v.price}
+            description={v.description}
+            includes={v.includes}
+            popular={v.popular}
+          />
+        ))}
+      </div>
+
+      <div style="text-align: center; margin-top: 64px; max-width: 600px; margin-left: auto; margin-right: auto;" data-reveal>
+        <p class="text-muted" style="font-size: 0.9rem; line-height: 1.8; margin: 0 0 8px;">
+          All vouchers are presented in our signature AUREA gift packaging and can be posted or collected in person. To purchase, please call us or visit the salon.
+        </p>
+        <p class="text-muted" style="font-size: 0.85rem;">
+          Custom amounts are also available upon request.
+        </p>
+      </div>
+    </div>
+  </section>
+</Layout>

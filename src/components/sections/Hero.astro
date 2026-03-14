@@ -1,0 +1,176 @@
+---
+
+---
+
+<!-- Hero: Full viewport, looping ambient video with image fallback -->
+<section
+  id="hero"
+  style="position: relative; height: 100vh; min-height: 700px; display: flex; align-items: center; justify-content: center; overflow: hidden;"
+  aria-label="Welcome to AUREA"
+>
+  <!-- Background: Video + Image fallback -->
+  <div style="position: absolute; inset: 0; z-index: 0;">
+    <!-- Ambient video — candle bokeh -->
+    <video
+      id="hero-video"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.1);"
+      aria-hidden="true"
+    >
+      <source src="https://assets.mixkit.co/videos/14350/14350-720.mp4" type="video/mp4" />
+    </video>
+
+    <!-- Static image fallback (shown if video fails or on reduced motion) -->
+    <img
+      id="hero-fallback"
+      src="https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=1920&q=85&fit=crop&auto=format"
+      alt=""
+      role="presentation"
+      loading="eager"
+      decoding="async"
+      style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none;"
+    />
+
+    <!-- Dark gradient overlay — strong enough for text legibility -->
+    <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,10,10,0.35) 0%, rgba(10,10,10,0.55) 40%, rgba(10,10,10,0.65) 70%, rgba(10,10,10,0.75) 100%);"></div>
+  </div>
+
+  <!-- Content -->
+  <div style="position: relative; z-index: 1; text-align: center; max-width: 900px; padding: 0 24px;">
+    <span
+      class="eyebrow"
+      style="display: block; margin-bottom: 28px; opacity: 0; color: rgba(197, 165, 114, 0.85); text-shadow: 0 1px 8px rgba(0,0,0,0.4);"
+      data-hero-el
+    >
+      Luxury Spa &amp; Salon &mdash; Marylebone
+    </span>
+
+    <h1
+      style="margin: 0 0 28px; opacity: 0; color: #FFFFFF; text-shadow: 0 2px 20px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.3);"
+      data-hero-el
+    >
+      Where Beauty<br>Finds Its Light
+    </h1>
+
+    <p
+      class="font-body"
+      style="font-size: clamp(1.05rem, 1.6vw, 1.2rem); line-height: 1.9; max-width: 520px; margin: 0 auto 48px; font-weight: 300; opacity: 0; color: rgba(255,255,255,0.88); text-shadow: 0 1px 8px rgba(0,0,0,0.4);"
+      data-hero-el
+    >
+      An intimate sanctuary for hair, skin, and wellbeing.<br>
+      Expert artistry in a setting designed to restore.
+    </p>
+
+    <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; opacity: 0;" data-hero-el>
+      <a
+        href="/booking/"
+        class="btn-primary"
+        style="padding: 14px 40px; background: rgba(245,240,235,0.12); border: 1px solid rgba(255,255,255,0.6); color: #FFFFFF; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);"
+      >
+        Book Your Visit
+      </a>
+      <a
+        href="/treatments/"
+        class="btn-primary"
+        style="padding: 14px 40px; background: transparent; border: 1px solid rgba(255,255,255,0.35); color: rgba(255,255,255,0.85);"
+      >
+        Our Treatments
+      </a>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div
+    style="position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 10px; opacity: 0;"
+    data-hero-el
+    aria-hidden="true"
+  >
+    <span class="font-body" style="font-size: 0.6rem; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(245,240,235,0.6);">Scroll</span>
+    <div style="width: 1px; height: 40px; position: relative; overflow: hidden;">
+      <div style="width: 1px; height: 100%; background: var(--color-gold); animation: scrollLine 2s ease-in-out infinite;"></div>
+    </div>
+  </div>
+</section>
+
+<style>
+  @keyframes scrollLine {
+    0% { transform: translateY(-100%); }
+    50% { transform: translateY(0); }
+    100% { transform: translateY(100%); }
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const video = document.getElementById('hero-video') as HTMLVideoElement;
+  const fallback = document.getElementById('hero-fallback') as HTMLImageElement;
+
+  // Video fallback handling
+  if (video && fallback) {
+    if (prefersReducedMotion) {
+      // Show static image for reduced motion preference
+      video.style.display = 'none';
+      fallback.style.display = 'block';
+    } else {
+      // Fallback if video fails to load/play
+      video.addEventListener('error', () => {
+        video.style.display = 'none';
+        fallback.style.display = 'block';
+      });
+
+      // Some browsers block autoplay — catch the rejection
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          video.style.display = 'none';
+          fallback.style.display = 'block';
+        });
+      }
+    }
+  }
+
+  if (!prefersReducedMotion) {
+    // Staggered hero entrance
+    const heroEls = document.querySelectorAll('[data-hero-el]');
+    gsap.fromTo(
+      heroEls,
+      { opacity: 0, y: 40 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1.2,
+        stagger: 0.18,
+        ease: 'power3.out',
+        delay: 0.3,
+      }
+    );
+
+    // Parallax on scroll — video/image scales down
+    const bgEl = video?.style.display !== 'none' ? video : fallback;
+    if (bgEl) {
+      gsap.to(bgEl, {
+        scale: 1,
+        yPercent: 8,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#hero',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+        },
+      });
+    }
+  } else {
+    document.querySelectorAll('[data-hero-el]').forEach(el => {
+      (el as HTMLElement).style.opacity = '1';
+    });
+  }
+</script>

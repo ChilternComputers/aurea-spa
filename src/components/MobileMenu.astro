@@ -1,0 +1,165 @@
+---
+import { navLinks } from '@/data/navigation';
+import { SITE } from '@/config';
+
+const currentPath = Astro.url.pathname;
+---
+
+<div
+  id="mobile-menu"
+  role="dialog"
+  aria-label="Mobile navigation"
+  class="lg:hidden"
+  style="position: fixed; inset: 0; z-index: 45; pointer-events: none; visibility: hidden;"
+>
+  <!-- Backdrop -->
+  <div
+    id="mobile-menu-backdrop"
+    style="position: absolute; inset: 0; background: rgba(26, 26, 26, 0.5); backdrop-filter: blur(4px); opacity: 0; transition: opacity 0.5s ease;"
+  ></div>
+
+  <!-- Full-screen panel -->
+  <div
+    id="mobile-menu-panel"
+    class="bg-charcoal"
+    style="position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.5s ease;"
+  >
+    <!-- Close button -->
+    <button
+      id="menu-close"
+      aria-label="Close menu"
+      style="position: absolute; top: 24px; right: clamp(24px, 4vw, 48px); background: none; border: none; cursor: pointer; padding: 8px; z-index: 2;"
+    >
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="var(--color-cream)" stroke-width="1" stroke-linecap="round">
+        <line x1="4" y1="4" x2="24" y2="24" />
+        <line x1="24" y1="4" x2="4" y2="24" />
+      </svg>
+    </button>
+
+    <!-- Navigation links — oversized italic serif -->
+    <nav aria-label="Mobile navigation" style="text-align: center;">
+      <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px;">
+        {navLinks.map((link, i) => (
+          <li>
+            <a
+              href={link.href}
+              class={`font-heading mobile-nav-link ${currentPath === link.href ? 'text-gold' : 'text-cream'}`}
+              style={`font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 300; font-style: italic; letter-spacing: 0.02em; display: inline-block; opacity: 0; transform: translateY(20px); transition: color 0.3s ease;`}
+              aria-current={currentPath === link.href ? 'page' : undefined}
+              data-mobile-link
+              data-index={i}
+            >
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <!-- Book CTA -->
+      <div style="margin-top: 40px; opacity: 0; transform: translateY(20px);" data-mobile-cta>
+        <a
+          href="/booking/"
+          class="btn-primary btn-outline-light"
+          style="padding: 14px 48px;"
+        >
+          Book Your Visit
+        </a>
+      </div>
+
+      <!-- Contact info -->
+      <div style="margin-top: 48px; opacity: 0;" data-mobile-footer>
+        <p class="text-muted font-body" style="font-size: 0.78rem; letter-spacing: 0.1em;">
+          {SITE.phone} &nbsp;&middot;&nbsp; {SITE.email}
+        </p>
+      </div>
+    </nav>
+  </div>
+</div>
+
+<script>
+  import { gsap } from 'gsap';
+
+  const menuToggle = document.getElementById('menu-toggle');
+  const menuClose = document.getElementById('menu-close');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const backdrop = document.getElementById('mobile-menu-backdrop');
+  const panel = document.getElementById('mobile-menu-panel');
+  const mobileLinks = document.querySelectorAll('[data-mobile-link]');
+  const mobileCta = document.querySelector('[data-mobile-cta]');
+  const mobileFooter = document.querySelector('[data-mobile-footer]');
+  let isOpen = false;
+
+  function openMenu() {
+    if (!mobileMenu || !panel || !backdrop || isOpen) return;
+    isOpen = true;
+
+    mobileMenu.style.pointerEvents = 'auto';
+    mobileMenu.style.visibility = 'visible';
+    mobileMenu.setAttribute('aria-modal', 'true');
+    document.body.style.overflow = 'hidden';
+    menuToggle?.setAttribute('aria-expanded', 'true');
+
+    // Animate in
+    gsap.to(backdrop, { opacity: 1, duration: 0.4 });
+    gsap.to(panel, { opacity: 1, duration: 0.4 });
+
+    // Stagger links
+    gsap.fromTo(mobileLinks,
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.5, stagger: 0.06, delay: 0.15, ease: 'power3.out' }
+    );
+    if (mobileCta) {
+      gsap.fromTo(mobileCta, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, delay: 0.55, ease: 'power3.out' });
+    }
+    if (mobileFooter) {
+      gsap.fromTo(mobileFooter, { opacity: 0 }, { opacity: 1, duration: 0.5, delay: 0.7 });
+    }
+    menuClose?.focus();
+  }
+
+  function closeMenu() {
+    if (!mobileMenu || !panel || !backdrop || !isOpen) return;
+    isOpen = false;
+
+    menuToggle?.setAttribute('aria-expanded', 'false');
+    mobileMenu.removeAttribute('aria-modal');
+    document.body.style.overflow = '';
+
+    gsap.to(panel, { opacity: 0, duration: 0.3 });
+    gsap.to(backdrop, { opacity: 0, duration: 0.3, onComplete: () => {
+      if (mobileMenu) {
+        mobileMenu.style.pointerEvents = 'none';
+        mobileMenu.style.visibility = 'hidden';
+      }
+      // Reset link positions for next open
+      gsap.set(mobileLinks, { opacity: 0, y: 20 });
+      if (mobileCta) gsap.set(mobileCta, { opacity: 0, y: 20 });
+      if (mobileFooter) gsap.set(mobileFooter, { opacity: 0 });
+    }});
+  }
+
+  menuToggle?.addEventListener('click', openMenu);
+  menuClose?.addEventListener('click', () => { closeMenu(); menuToggle?.focus(); });
+  backdrop?.addEventListener('click', () => { closeMenu(); menuToggle?.focus(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && isOpen) { closeMenu(); menuToggle?.focus(); }
+  });
+
+  // Focus trap
+  if (mobileMenu) {
+    mobileMenu.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab' || !isOpen) return;
+      const focusable = mobileMenu.querySelectorAll<HTMLElement>('a[href], button');
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
+  }
+</script>

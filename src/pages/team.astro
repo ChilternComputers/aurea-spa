@@ -1,0 +1,47 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHero from '@/components/sections/PageHero.astro';
+import TeamCard from '@/components/ui/TeamCard.astro';
+import BookingCTA from '@/components/sections/BookingCTA.astro';
+import { team } from '@/data/team';
+import { getWebPageSchema } from '@/lib/schemas';
+---
+
+<Layout
+  title="Our Team"
+  description="Meet the artists, therapists, and specialists behind AUREA. Award-winning talent dedicated to your transformation."
+  schema={getWebPageSchema({
+    title: 'Our Team — AUREA',
+    description: 'Meet the experts behind AUREA luxury spa and salon.',
+    url: 'https://aurea-spa.pages.dev/team/',
+  })}
+>
+  <PageHero
+    title="Meet the Team"
+    subtitle="Our Artists"
+    description="Every member of the AUREA team is a specialist in their craft, united by a shared commitment to excellence and care."
+    image="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=1920&q=85&fit=crop&auto=format"
+  />
+
+  <section style="padding: clamp(60px, 8vw, 100px) 0;">
+    <div style="max-width: 1400px; margin: 0 auto; padding: 0 clamp(24px, 4vw, 48px);">
+      <div
+        style="display: grid; grid-template-columns: 1fr; gap: clamp(40px, 5vw, 56px);"
+        class="md:grid-cols-2 lg:grid-cols-3"
+        data-stagger-parent
+      >
+        {team.map((member) => (
+          <TeamCard
+            name={member.name}
+            role={member.role}
+            specialty={member.specialty}
+            bio={member.bio}
+            image={member.image}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <BookingCTA />
+</Layout>

@@ -1,0 +1,88 @@
+---
+interface Props {
+  label: string;
+  name: string;
+  type?: string;
+  required?: boolean;
+  placeholder?: string;
+  options?: string[];
+  min?: string;
+}
+
+const { label, name, type = 'text', required = false, placeholder = '', options, min } = Astro.props;
+const isTextarea = type === 'textarea';
+const isSelect = type === 'select';
+const inputId = `field-${name}`;
+
+const fieldStyle = `
+  padding: 11px 16px;
+  font-size: 0.88rem;
+  font-family: var(--font-body);
+  width: 100%;
+  outline: none;
+  background: #FFFFFF;
+  color: var(--color-charcoal);
+  border: 1px solid var(--color-border);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  letter-spacing: 0.01em;
+`.replace(/\n/g, ' ').trim();
+
+const focusClass = 'booking-field';
+---
+
+<div style="display: flex; flex-direction: column; gap: 6px;">
+  <label
+    for={inputId}
+    class="font-body"
+    style="font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 500; color: var(--color-muted);"
+  >
+    {label}{required && <span style="color: var(--color-gold);"> *</span>}
+  </label>
+
+  {isTextarea ? (
+    <textarea
+      id={inputId}
+      name={name}
+      required={required}
+      placeholder={placeholder}
+      rows="5"
+      class={focusClass}
+      style={`${fieldStyle} resize: vertical; min-height: 100px; line-height: 1.7;`}
+    ></textarea>
+  ) : isSelect ? (
+    <select
+      id={inputId}
+      name={name}
+      required={required}
+      class={focusClass}
+      style={`${fieldStyle} appearance: none; cursor: pointer; background-image: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%237a7568%22 stroke-width=%222%22 stroke-linecap=%22round%22><polyline points=%226 9 12 15 18 9%22/></svg>'); background-repeat: no-repeat; background-position: right 16px center;`}
+    >
+      <option value="">{placeholder || `Select ${label.toLowerCase()}`}</option>
+      {options?.map((opt) => (
+        <option value={opt}>{opt}</option>
+      ))}
+    </select>
+  ) : (
+    <input
+      id={inputId}
+      name={name}
+      type={type}
+      required={required}
+      placeholder={placeholder}
+      min={min}
+      class={focusClass}
+      style={fieldStyle}
+    />
+  )}
+</div>
+
+<style>
+  .booking-field::placeholder {
+    color: var(--color-border);
+    font-weight: 300;
+  }
+  .booking-field:focus {
+    border-color: var(--color-sage);
+    box-shadow: 0 0 0 3px rgba(74, 93, 78, 0.08);
+  }
+</style>

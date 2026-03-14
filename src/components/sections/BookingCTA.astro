@@ -1,0 +1,61 @@
+---
+import { SITE } from '@/config';
+---
+
+<section
+  style="position: relative; padding: clamp(100px, 14vw, 200px) 0; overflow: hidden;"
+  aria-label="Book your appointment"
+>
+  <!-- Ambient video background — candle flames -->
+  <div style="position: absolute; inset: 0; z-index: 0;">
+    <video
+      autoplay muted loop playsinline preload="metadata"
+      style="width: 100%; height: 100%; object-fit: cover;"
+      aria-hidden="true"
+    >
+      <source src="https://assets.mixkit.co/videos/14675/14675-720.mp4" type="video/mp4" />
+    </video>
+    <img
+      src="https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=1920&q=85&fit=crop&auto=format"
+      alt=""
+      role="presentation"
+      loading="lazy"
+      decoding="async"
+      style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none;"
+      data-video-fallback
+    />
+    <div style="position: absolute; inset: 0; background: rgba(10, 10, 10, 0.6);"></div>
+  </div>
+
+  <!-- Content -->
+  <div style="position: relative; z-index: 1; max-width: 680px; margin: 0 auto; text-align: center; padding: 0 24px;" data-reveal>
+    <span class="eyebrow" style="display: block; margin-bottom: 20px; color: rgba(197, 165, 114, 0.85); text-shadow: 0 1px 6px rgba(0,0,0,0.3);">
+      Begin Your Journey
+    </span>
+
+    <h2 style="margin: 0 0 24px; color: #FFFFFF; text-shadow: 0 2px 16px rgba(0,0,0,0.4);">
+      Your Moment of<br>Restoration Awaits
+    </h2>
+
+    <p style="font-size: 1rem; line-height: 1.85; color: rgba(255,255,255,0.8); text-shadow: 0 1px 6px rgba(0,0,0,0.3); margin-bottom: 48px; max-width: 480px; display: inline-block;">
+      Whether it's a transformative colour, a restorative massage, or a complete day of indulgence — we're here to make it exceptional.
+    </p>
+
+    <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+      <a
+        href="/booking/"
+        class="btn-primary btn-fill"
+        style="padding: 16px 44px;"
+      >
+        Book Online
+      </a>
+      <a
+        href={`tel:${SITE.phone.replace(/\s/g, '')}`}
+        class="btn-primary btn-outline-light"
+        style="padding: 16px 44px;"
+      >
+        Call {SITE.phone}
+      </a>
+    </div>
+  </div>
+</section>

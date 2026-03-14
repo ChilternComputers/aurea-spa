@@ -1,0 +1,99 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHero from '@/components/sections/PageHero.astro';
+import BookingCTA from '@/components/sections/BookingCTA.astro';
+import TreatmentCard from '@/components/ui/TreatmentCard.astro';
+import { treatments, categoryLabels, type TreatmentCategory } from '@/data/treatments';
+import { getWebPageSchema } from '@/lib/schemas';
+
+const categories = Object.keys(categoryLabels) as TreatmentCategory[];
+---
+
+<Layout
+  title="Treatments"
+  description="Explore our full range of luxury treatments — hair, facials, massage, nails, and wellness. Expert care in an intimate setting."
+  schema={getWebPageSchema({
+    title: 'Treatments — AUREA',
+    description: 'Explore our full range of luxury treatments.',
+    url: 'https://aurea-spa.pages.dev/treatments/',
+  })}
+>
+  <PageHero
+    title="Our Treatments"
+    subtitle="Services"
+    description="Every treatment is tailored to you. From transformative colour to restorative massage, discover the full AUREA menu."
+    image="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=1920&q=85&fit=crop&auto=format"
+  />
+
+  <section style="padding: clamp(60px, 8vw, 100px) 0;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(24px, 4vw, 48px);">
+      <!-- Category tabs -->
+      <div
+        id="treatment-tabs"
+        role="tablist"
+        aria-label="Treatment categories"
+        style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: clamp(40px, 5vw, 64px);"
+        data-reveal
+      >
+        <button role="tab" aria-selected="true" data-tab="all" class="tab-btn btn-primary btn-fill" style="padding: 8px 24px;">
+          All
+        </button>
+        {categories.map((cat) => (
+          <button role="tab" aria-selected="false" data-tab={cat} class="tab-btn btn-primary btn-outline" style="padding: 8px 24px;">
+            {categoryLabels[cat]}
+          </button>
+        ))}
+      </div>
+
+      <!-- Treatment grid -->
+      <div
+        id="treatment-grid"
+        role="tabpanel"
+        aria-label="Treatments"
+        style="display: grid; grid-template-columns: 1fr; gap: 16px;"
+        class="md:grid-cols-2 lg:grid-cols-3"
+      >
+        {treatments.map((t) => (
+          <div data-category={t.category} class="treatment-item">
+            <TreatmentCard
+              name={t.name}
+              description={t.description}
+              duration={t.duration}
+              price={t.price}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <BookingCTA />
+</Layout>
+
+<script>
+  const tabs = document.querySelectorAll('.tab-btn');
+  const items = document.querySelectorAll('.treatment-item');
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const category = tab.getAttribute('data-tab');
+
+      tabs.forEach((t) => {
+        const isActive = t === tab;
+        t.setAttribute('aria-selected', String(isActive));
+        if (isActive) {
+          (t as HTMLElement).classList.remove('btn-outline');
+          (t as HTMLElement).classList.add('btn-fill');
+        } else {
+          (t as HTMLElement).classList.remove('btn-fill');
+          (t as HTMLElement).classList.add('btn-outline');
+        }
+      });
+
+      items.forEach((item) => {
+        const el = item as HTMLElement;
+        el.style.display = (category === 'all' || item.getAttribute('data-category') === category) ? '' : 'none';
+      });
+    });
+  });
+</script>

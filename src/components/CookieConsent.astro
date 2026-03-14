@@ -1,0 +1,54 @@
+<!-- Cookie Consent Banner -->
+<div
+  id="cookie-consent"
+  role="dialog"
+  aria-label="Cookie consent"
+  style="display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999; background: #4A5D4E; border-top: 1px solid rgba(197, 165, 114, 0.3); padding: 20px 24px;"
+>
+  <div style="max-width: 960px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+    <p class="font-body" style="font-size: 0.88rem; line-height: 1.7; color: #F5F0EB; margin: 0; flex: 1; min-width: 260px;">
+      We use essential cookies to ensure our website functions properly. No tracking or advertising cookies are used. See our
+      <a href="/privacy/" style="color: #C5A572; text-decoration: underline;">Privacy Policy</a> for details.
+    </p>
+    <div style="display: flex; gap: 12px; flex-shrink: 0;">
+      <button
+        id="cookie-accept"
+        type="button"
+        style="background: #C5A572; color: #1a1a1a; border: none; padding: 10px 24px; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: background 0.3s ease;"
+      >
+        Accept
+      </button>
+      <button
+        id="cookie-decline"
+        type="button"
+        style="background: transparent; color: #F5F0EB; border: 1px solid rgba(245, 240, 235, 0.3); padding: 10px 24px; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; transition: border-color 0.3s ease;"
+      >
+        Decline
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const banner = document.getElementById('cookie-consent');
+  const acceptBtn = document.getElementById('cookie-accept');
+  const declineBtn = document.getElementById('cookie-decline');
+
+  if (banner && !localStorage.getItem('cookie-consent')) {
+    banner.style.display = 'block';
+  }
+
+  function dismiss(value: string) {
+    localStorage.setItem('cookie-consent', value);
+    if (banner) banner.style.display = 'none';
+  }
+
+  acceptBtn?.addEventListener('click', () => dismiss('accepted'));
+  declineBtn?.addEventListener('click', () => dismiss('declined'));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && banner && banner.style.display === 'block') {
+      dismiss('declined');
+    }
+  });
+</script>

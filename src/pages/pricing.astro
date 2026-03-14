@@ -1,0 +1,115 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHero from '@/components/sections/PageHero.astro';
+import BookingCTA from '@/components/sections/BookingCTA.astro';
+import Divider from '@/components/ui/Divider.astro';
+import { pricingMenu, spaPackages } from '@/data/pricing';
+import { getWebPageSchema } from '@/lib/schemas';
+---
+
+<Layout
+  title="Pricing"
+  description="View the full AUREA price list — hair, facials, massage, nails, and wellness treatments. Transparent pricing, no hidden extras."
+  schema={getWebPageSchema({
+    title: 'Pricing — AUREA',
+    description: 'Full treatment price list for AUREA spa and salon.',
+    url: 'https://aurea-spa.pages.dev/pricing/',
+  })}
+>
+  <PageHero
+    title="Pricing"
+    subtitle="Treatment Menu"
+    description="Transparent pricing with no hidden extras. All treatments include a consultation."
+    image="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=1920&q=85&fit=crop&auto=format"
+  />
+
+  <!-- Price List -->
+  <section style="padding: clamp(60px, 8vw, 100px) 0;">
+    <div style="max-width: 800px; margin: 0 auto; padding: 0 24px;">
+      {pricingMenu.map((section, i) => (
+        <div style={`margin-bottom: ${i < pricingMenu.length - 1 ? '64px' : '0'};`} data-reveal>
+          <h2 class="font-heading text-charcoal" style="font-size: 1.75rem; font-weight: 300; margin: 0 0 8px;">
+            {section.category}
+          </h2>
+          <div class="line-accent" style="margin-bottom: 24px;"></div>
+
+          <div style="display: flex; flex-direction: column;">
+            {section.items.map((item) => (
+              <div
+                style="display: flex; align-items: baseline; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid rgba(232, 213, 200, 0.8);"
+              >
+                <div style="flex: 1;">
+                  <span class="font-body text-charcoal" style="font-size: 0.95rem; font-weight: 500;">
+                    {item.name}
+                  </span>
+                  <span class="text-muted" style="font-size: 0.82rem; margin-left: 12px;">
+                    {item.duration}
+                  </span>
+                </div>
+                <span class="text-sage font-body" style="font-size: 1rem; font-weight: 600; white-space: nowrap; margin-left: 16px;">
+                  &pound;{item.price}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <Divider style="padding: 0 24px;" />
+
+  <!-- Spa Packages -->
+  <section class="bg-cream" style="padding: 80px 24px 120px;">
+    <div style="max-width: 1100px; margin: 0 auto;">
+      <div style="text-align: center; margin-bottom: 48px;" data-reveal>
+        <span class="font-body text-gold" style="font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500; display: block; margin-bottom: 12px;">
+          Packages
+        </span>
+        <h2 class="font-heading text-charcoal" style="font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 300; margin: 0;">
+          Spa Day Experiences
+        </h2>
+        <div class="line-accent" style="margin: 20px auto 0;"></div>
+      </div>
+
+      <div
+        style="display: grid; grid-template-columns: 1fr; gap: 24px;"
+        class="md:grid-cols-2"
+        data-stagger-parent
+      >
+        {spaPackages.map((pkg) => (
+          <div
+            class="bg-white"
+            style="padding: 40px 32px; border: 1px solid rgba(197, 165, 114, 0.15);"
+            data-stagger-child
+          >
+            <h3 class="font-heading text-charcoal" style="font-size: 1.4rem; font-weight: 400; margin: 0 0 4px;">
+              {pkg.name}
+            </h3>
+            <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px;">
+              <span class="text-sage font-body" style="font-size: 1.5rem; font-weight: 600;">
+                &pound;{pkg.price}
+              </span>
+              <span class="text-muted" style="font-size: 0.82rem;">{pkg.duration}</span>
+            </div>
+            <p class="text-muted" style="font-size: 0.9rem; line-height: 1.7; margin: 0 0 20px;">
+              {pkg.description}
+            </p>
+            <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px;">
+              {pkg.includes.map((item) => (
+                <li class="text-charcoal" style="font-size: 0.88rem; display: flex; align-items: center; gap: 10px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-gold)" stroke-width="2" stroke-linecap="round" style="flex-shrink: 0;">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <BookingCTA />
+</Layout>

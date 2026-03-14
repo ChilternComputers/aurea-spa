@@ -1,0 +1,22 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Hero from '@/components/sections/Hero.astro';
+import AboutPreview from '@/components/sections/AboutPreview.astro';
+import FeaturedTreatments from '@/components/sections/FeaturedTreatments.astro';
+import Testimonials from '@/components/sections/Testimonials.astro';
+import BookingCTA from '@/components/sections/BookingCTA.astro';
+import { SITE } from '@/config';
+import { getBusinessSchema } from '@/lib/schemas';
+---
+
+<Layout
+  title="Home"
+  description={SITE.description}
+  schema={getBusinessSchema()}
+>
+  <Hero />
+  <AboutPreview />
+  <FeaturedTreatments />
+  <Testimonials />
+  <BookingCTA />
+</Layout>

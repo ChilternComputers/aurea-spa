@@ -1,0 +1,45 @@
+---
+interface Props {
+  name: string;
+  description: string;
+  duration: string;
+  price: number;
+}
+
+const { name, description, duration, price } = Astro.props;
+---
+
+<div
+  class="bg-white"
+  style="padding: 28px; border: 1px solid var(--color-border); display: flex; flex-direction: column; height: 100%; transition: border-color 0.3s ease;"
+  data-stagger-child
+  onmouseenter="this.style.borderColor='var(--color-gold)'"
+  onmouseleave="this.style.borderColor='var(--color-border)'"
+>
+  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+    <h3 class="font-heading" style="font-size: 1.2rem; font-weight: 400; font-style: italic; margin: 0; flex: 1;">
+      {name}
+    </h3>
+    <span class="text-sage font-body" style="font-size: 1rem; font-weight: 600; white-space: nowrap; margin-left: 16px;">
+      &pound;{price}
+    </span>
+  </div>
+
+  <p class="text-muted" style="font-size: 0.88rem; line-height: 1.75; flex: 1; margin-bottom: 16px;">
+    {description}
+  </p>
+
+  <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--color-border); padding-top: 14px;">
+    <span class="text-muted" style="font-size: 0.78rem; display: flex; align-items: center; gap: 6px;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      {duration}
+    </span>
+    <a
+      href="/booking/"
+      class="nav-link font-body text-sage"
+      style="font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600;"
+    >
+      Book &rarr;
+    </a>
+  </div>
+</div>

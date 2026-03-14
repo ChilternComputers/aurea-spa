@@ -1,0 +1,105 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHero from '@/components/sections/PageHero.astro';
+import { SITE } from '@/config';
+import { getWebPageSchema } from '@/lib/schemas';
+---
+
+<Layout
+  title="Terms & Conditions"
+  description="Terms and conditions for AUREA spa and salon services, bookings, gift vouchers, and website use."
+  noindex={true}
+  schema={getWebPageSchema({
+    title: 'Terms & Conditions — AUREA',
+    description: 'Terms and conditions for AUREA spa and salon services.',
+    url: 'https://aurea-spa.pages.dev/terms/',
+  })}
+>
+  <PageHero title="Terms & Conditions" />
+
+  <section class="bg-cream" style="padding: 60px 24px 120px;">
+    <div style="max-width: 760px; margin: 0 auto;">
+      <article style="display: flex; flex-direction: column; gap: 32px;">
+        <p class="text-muted" style="font-size: 0.88rem;">Last updated: 1 March 2026</p>
+
+        <div>
+          <h2 class="font-heading text-charcoal" style="font-size: 1.4rem; font-weight: 400; margin: 0 0 12px;">1. General</h2>
+          <p class="text-charcoal" style="font-size: 0.95rem; line-height: 1.8; margin: 0;">
+            These terms and conditions govern your use of the AUREA website and our spa and salon services. By booking a treatment or using our website, you agree to these terms. AUREA is located at {SITE.address.full}.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="font-heading text-charcoal" style="font-size: 1.4rem; font-weight: 400; margin: 0 0 12px;">2. Bookings &amp; Appointments</h2>
+          <ul style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px;">
+            <li class="text-charcoal" style="font-size: 0.95rem; line-height: 1.7;">All bookings are subject to availability and must be confirmed by AUREA</li>
+            <li class="text-charcoal" style="font-size: 0.95rem; line-height: 1.7;">Please arrive at least 10 minutes before your scheduled appointment</li>
+            <li class="text-charcoal" style="font-size: 0.95rem; line-height: 1.7;">Late arrivals may result in a shortened treatment to avoid delaying other clients</li>
+            <li class="text-charcoal" style="font-size: 0.95rem; line-height: 1.7;">We reserve the right to refuse service if a client arrives more than 15 minutes late</li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="font-heading text-charcoal" style="font-size: 1.4rem; font-weight: 400; margin: 0 0 12px;">3. Cancellation Policy</h2>
+          <ul style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px;">
+            <li class="text-charcoal" style="font-size: 0.95rem; line-height: 1.7;">Cancellations made more than 24 hours in advance will receive a full refund</li>
+            <li class="text-charcoal" style="font-size: 0.95rem; line-height: 1.7;">Cancellations within 24 hours will be charged at 50% of the treatment price</li>
+            <li class="text-charcoal" style="font-size: 0.95rem; line-height: 1.7;">No-shows will be charged the full treatment price</li>
+            <li class="text-charcoal" style="font-size: 0.95rem; line-height: 1.7;">To cancel or reschedule, please contact us on {SITE.phone} or email <a href={`mailto:${SITE.email}`} class="text-sage hover:text-dark-sage transition-colors" style="text-decoration: underline;">{SITE.email}</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="font-heading text-charcoal" style="font-size: 1.4rem; font-weight: 400; margin: 0 0 12px;">4. Gift Vouchers</h2>
+          <ul style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px;">
+            <li class="text-charcoal" style="font-size: 0.95rem; line-height: 1.7;">Gift vouchers are valid for 12 months from the date of purchase</li>
+            <li class="text-charcoal" style="font-size: 0.95rem; line-height: 1.7;">Vouchers are non-refundable and cannot be exchanged for cash</li>
+            <li class="text-charcoal" style="font-size: 0.95rem; line-height: 1.7;">Lost or stolen vouchers cannot be replaced</li>
+            <li class="text-charcoal" style="font-size: 0.95rem; line-height: 1.7;">If the treatment value exceeds the voucher amount, the balance must be paid at the time of the appointment</li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="font-heading text-charcoal" style="font-size: 1.4rem; font-weight: 400; margin: 0 0 12px;">5. Health &amp; Safety</h2>
+          <ul style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px;">
+            <li class="text-charcoal" style="font-size: 0.95rem; line-height: 1.7;">Please inform us of any allergies, medical conditions, or skin sensitivities before your treatment</li>
+            <li class="text-charcoal" style="font-size: 0.95rem; line-height: 1.7;">Certain treatments may require a patch test 48 hours in advance</li>
+            <li class="text-charcoal" style="font-size: 0.95rem; line-height: 1.7;">We reserve the right to refuse or modify a treatment if we believe it may pose a health risk</li>
+            <li class="text-charcoal" style="font-size: 0.95rem; line-height: 1.7;">Pregnant clients should consult their doctor before booking certain treatments and must inform us at the time of booking</li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="font-heading text-charcoal" style="font-size: 1.4rem; font-weight: 400; margin: 0 0 12px;">6. Payment</h2>
+          <ul style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px;">
+            <li class="text-charcoal" style="font-size: 0.95rem; line-height: 1.7;">Payment is required at the time of service unless otherwise agreed</li>
+            <li class="text-charcoal" style="font-size: 0.95rem; line-height: 1.7;">We accept cash, debit cards, credit cards, and contactless payments</li>
+            <li class="text-charcoal" style="font-size: 0.95rem; line-height: 1.7;">All prices are inclusive of VAT where applicable</li>
+            <li class="text-charcoal" style="font-size: 0.95rem; line-height: 1.7;">Prices are subject to change without notice</li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="font-heading text-charcoal" style="font-size: 1.4rem; font-weight: 400; margin: 0 0 12px;">7. Liability</h2>
+          <p class="text-charcoal" style="font-size: 0.95rem; line-height: 1.8; margin: 0;">
+            While we take every care to provide safe and professional services, AUREA accepts no liability for adverse reactions to treatments where the client has failed to disclose relevant medical information. Personal belongings are brought into the spa at your own risk.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="font-heading text-charcoal" style="font-size: 1.4rem; font-weight: 400; margin: 0 0 12px;">8. Website Use</h2>
+          <p class="text-charcoal" style="font-size: 0.95rem; line-height: 1.8; margin: 0;">
+            The content of this website is for general information purposes only. While we endeavour to keep information accurate and up to date, we make no warranties about the completeness or accuracy of the information. Images are for illustrative purposes and may not reflect the exact appearance of our premises or treatments.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="font-heading text-charcoal" style="font-size: 1.4rem; font-weight: 400; margin: 0 0 12px;">9. Contact</h2>
+          <p class="text-charcoal" style="font-size: 0.95rem; line-height: 1.8; margin: 0;">
+            If you have any questions about these terms, please contact us at <a href={`mailto:${SITE.email}`} class="text-sage hover:text-dark-sage transition-colors" style="text-decoration: underline;">{SITE.email}</a> or call us on <a href={`tel:${SITE.phone.replace(/\s/g, '')}`} class="text-sage hover:text-dark-sage transition-colors" style="text-decoration: underline;">{SITE.phone}</a>.
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+</Layout>

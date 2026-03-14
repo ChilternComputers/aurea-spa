@@ -1,0 +1,157 @@
+---
+import { navLinks } from '@/data/navigation';
+
+const currentPath = Astro.url.pathname;
+---
+
+<header
+  id="navbar"
+  role="banner"
+  style="position: fixed; top: 0; left: 0; right: 0; z-index: 50; transition: transform 0.5s cubic-bezier(0.445, 0.05, 0.55, 0.95), background-color 0.5s ease, backdrop-filter 0.5s ease;"
+>
+  <div style="padding: 0 clamp(24px, 4vw, 48px);">
+    <nav
+      aria-label="Main navigation"
+      style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 80px; border-bottom: 1px solid rgba(245, 240, 235, 0.15);"
+      id="nav-inner"
+    >
+      <!-- Logo -->
+      <a href="/" aria-label="AUREA — Home" style="z-index: 10; text-decoration: none;">
+        <span
+          class="font-heading"
+          style="font-size: 1.6rem; letter-spacing: 0.28em; font-weight: 300; color: var(--color-cream); transition: color 0.5s ease;"
+          id="logo-text"
+        >AUREA</span>
+      </a>
+
+      <!-- Desktop Nav — centered -->
+      <ul
+        class="hidden lg:flex"
+        style="list-style: none; margin: 0; padding: 0; gap: 36px; align-items: center; position: absolute; left: 50%; transform: translateX(-50%);"
+      >
+        {navLinks.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              class={`nav-link nav-link-light font-body`}
+              style="font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 500; color: var(--color-cream); transition: color 0.5s ease;"
+              aria-current={currentPath === link.href ? 'page' : undefined}
+              data-nav-link
+            >
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <!-- Right: Book CTA + Hamburger -->
+      <div style="display: flex; align-items: center; gap: 24px; z-index: 10;">
+        <a
+          href="/booking/"
+          class="hidden lg:inline-flex btn-primary btn-outline-light"
+          style="padding: 10px 28px; transition: all 0.4s ease;"
+          id="book-btn"
+        >
+          Book Now
+        </a>
+
+        <!-- Hamburger — always visible on mobile, custom design -->
+        <button
+          id="menu-toggle"
+          class="lg:hidden"
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+          style="background: none; border: none; cursor: pointer; padding: 8px; z-index: 10; position: relative; width: 32px; height: 24px;"
+        >
+          <span style="position: absolute; left: 0; width: 32px; height: 1px; background: var(--color-cream); transition: all 0.4s ease; top: 4px;" class="hamburger-line" id="ham-1"></span>
+          <span style="position: absolute; left: 0; width: 20px; height: 1px; background: var(--color-cream); transition: all 0.4s ease; top: 12px;" class="hamburger-line" id="ham-2"></span>
+          <span style="position: absolute; left: 0; width: 26px; height: 1px; background: var(--color-cream); transition: all 0.4s ease; top: 20px;" class="hamburger-line" id="ham-3"></span>
+        </button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const navbar = document.getElementById('navbar');
+  const navInner = document.getElementById('nav-inner');
+  const logoText = document.getElementById('logo-text');
+  const bookBtn = document.getElementById('book-btn');
+  const navLinksEls = document.querySelectorAll('[data-nav-link]');
+  const hamLines = document.querySelectorAll('.hamburger-line');
+  let lastScroll = 0;
+  let ticking = false;
+  let scrolled = false;
+
+  function updateNavbar() {
+    const y = window.scrollY;
+
+    if (!navbar || !navInner || !logoText) return;
+
+    if (y > 60 && !scrolled) {
+      scrolled = true;
+      // Frosted glass, dark text
+      navbar.style.backgroundColor = 'rgba(245, 240, 235, 0.88)';
+      navbar.style.backdropFilter = 'blur(24px) saturate(180%)';
+      (navbar.style as any).WebkitBackdropFilter = 'blur(24px) saturate(180%)';
+      navInner.style.borderBottomColor = 'rgba(227, 221, 214, 0.6)';
+      logoText.style.color = 'var(--color-charcoal)';
+
+      navLinksEls.forEach(el => {
+        (el as HTMLElement).style.color = 'var(--color-charcoal)';
+        el.classList.remove('nav-link-light');
+      });
+
+      hamLines.forEach(el => {
+        (el as HTMLElement).style.background = 'var(--color-charcoal)';
+      });
+
+      if (bookBtn) {
+        bookBtn.classList.remove('btn-outline-light');
+        bookBtn.classList.add('btn-outline');
+      }
+    } else if (y <= 60 && scrolled) {
+      scrolled = false;
+      navbar.style.backgroundColor = 'transparent';
+      navbar.style.backdropFilter = 'none';
+      (navbar.style as any).WebkitBackdropFilter = 'none';
+      navInner.style.borderBottomColor = 'rgba(245, 240, 235, 0.15)';
+      logoText.style.color = 'var(--color-cream)';
+
+      navLinksEls.forEach(el => {
+        (el as HTMLElement).style.color = 'var(--color-cream)';
+        el.classList.add('nav-link-light');
+      });
+
+      hamLines.forEach(el => {
+        (el as HTMLElement).style.background = 'var(--color-cream)';
+      });
+
+      if (bookBtn) {
+        bookBtn.classList.remove('btn-outline');
+        bookBtn.classList.add('btn-outline-light');
+      }
+    }
+
+    // Hide on scroll down, show on scroll up
+    if (y > lastScroll && y > 300) {
+      navbar.style.transform = 'translateY(-100%)';
+    } else {
+      navbar.style.transform = 'translateY(0)';
+    }
+
+    lastScroll = y;
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(updateNavbar);
+      ticking = true;
+    }
+  }, { passive: true });
+
+  // Initial state — check if already scrolled on page load
+  updateNavbar();
+</script>

@@ -1,0 +1,109 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHero from '@/components/sections/PageHero.astro';
+import Divider from '@/components/ui/Divider.astro';
+import BookingCTA from '@/components/sections/BookingCTA.astro';
+import { getWebPageSchema } from '@/lib/schemas';
+---
+
+<Layout
+  title="About"
+  description="Discover the story behind AUREA — our philosophy, our founder, and our commitment to redefining beauty and wellness in Marylebone."
+  schema={getWebPageSchema({
+    title: 'About — AUREA',
+    description: 'The story behind AUREA luxury spa and salon.',
+    url: 'https://aurea-spa.pages.dev/about/',
+  })}
+>
+  <PageHero
+    title="Our Story"
+    subtitle="About AUREA"
+    description="A space created to restore, transform, and inspire."
+    image="https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=1920&q=85&fit=crop&auto=format"
+  />
+
+  <!-- Founder section -->
+  <section style="padding: clamp(80px, 12vw, 160px) 0;">
+    <div style="max-width: 1400px; margin: 0 auto; padding: 0 clamp(24px, 4vw, 48px);">
+      <div style="display: grid; grid-template-columns: 1fr; gap: clamp(48px, 6vw, 80px); align-items: center;" class="lg:grid-cols-2">
+        <div data-reveal>
+          <div class="img-zoom">
+            <img
+              src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=1920&q=85&fit=crop&crop=faces&auto=format"
+              alt="Isabelle Laurent, Founder of AUREA"
+              loading="lazy"
+              decoding="async"
+              style="width: 100%; aspect-ratio: 3/4; object-fit: cover;"
+            />
+          </div>
+        </div>
+        <div data-reveal>
+          <span class="eyebrow" style="display: block; margin-bottom: 16px;">The Founder</span>
+          <h2 style="margin: 0 0 24px;">Isabelle Laurent</h2>
+          <div class="line-accent" style="margin-bottom: 24px;"></div>
+          <p style="font-size: 1.05rem; line-height: 1.9; margin-bottom: 20px;">
+            After 18 years working in some of London's most prestigious salons and editorial studios, Isabelle founded AUREA in 2019 with a vision that felt both radical and obvious: beauty services should nourish the whole person, not just the surface.
+          </p>
+          <p class="text-muted" style="font-size: 0.95rem; line-height: 1.85; margin-bottom: 28px;">
+            Trained at the Vidal Sassoon Academy and with editorial credits in Vogue, Harper's Bazaar, and ELLE, Isabelle brings an artist's eye to every aspect of AUREA — from the colour on the walls to the botanicals in the diffuser.
+          </p>
+          <blockquote class="font-accent text-sage" style="font-size: 1.15rem; font-style: italic; line-height: 1.7; border-left: 2px solid var(--color-gold); padding-left: 20px;">
+            "I wanted to build a place where my clients could exhale the moment they walked in. Where excellence is the baseline, and kindness is the culture."
+          </blockquote>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Divider style="padding: 0 24px;" />
+
+  <!-- Philosophy -->
+  <section style="padding: clamp(80px, 12vw, 160px) 0;">
+    <div style="max-width: 800px; margin: 0 auto; padding: 0 24px; text-align: center;">
+      <span class="eyebrow" style="display: block; margin-bottom: 16px;" data-reveal>Our Philosophy</span>
+      <h2 style="margin: 0 0 32px;" data-reveal>Artistry Meets Intention</h2>
+      <div data-reveal>
+        <p style="font-size: 1.05rem; line-height: 2; margin-bottom: 24px;">
+          At AUREA, we believe that beauty is an act of care — for yourself, for the people who serve you, and for the world around you. That belief shapes everything we do.
+        </p>
+        <p class="text-muted" style="font-size: 1rem; line-height: 1.9; margin-bottom: 24px;">
+          We choose products that are kind to skin and planet. We design appointments with generous timing so nothing feels rushed. We invest in continuous training so our team stays at the forefront of their craft. And we create a space that feels less like a salon and more like a sanctuary.
+        </p>
+        <p class="text-muted" style="font-size: 1rem; line-height: 1.9;">
+          The result is an experience that goes beyond the treatment itself. Our clients leave looking extraordinary — and feeling genuinely restored.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Awards -->
+  <section class="bg-white" style="padding: clamp(80px, 12vw, 160px) 0;">
+    <div style="max-width: 1100px; margin: 0 auto; padding: 0 clamp(24px, 4vw, 48px); text-align: center;">
+      <span class="eyebrow" style="display: block; margin-bottom: 16px;" data-reveal>Recognition</span>
+      <h2 style="margin: 0 0 clamp(40px, 5vw, 64px);" data-reveal>Awards &amp; Press</h2>
+
+      <div
+        style="display: grid; grid-template-columns: 1fr; gap: 24px;"
+        class="md:grid-cols-2 lg:grid-cols-4"
+        data-stagger-parent
+      >
+        {[
+          { year: '2025', title: 'Best Boutique Spa', source: 'London Hair & Beauty Awards' },
+          { year: '2024', title: 'Top 10 Salons', source: 'Tatler' },
+          { year: '2024', title: 'Sustainability Award', source: 'UK Beauty Industry Awards' },
+          { year: '2023', title: 'Colourist of the Year', source: 'Creative Head' },
+        ].map((award) => (
+          <div style="padding: 32px 20px; border: 1px solid var(--color-border);" data-stagger-child>
+            <span class="eyebrow text-gold" style="display: block; margin-bottom: 10px; font-size: 0.6rem;">
+              {award.year}
+            </span>
+            <h3 style="font-size: 1.2rem; margin: 0 0 8px;">{award.title}</h3>
+            <span class="text-muted" style="font-size: 0.82rem;">{award.source}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <BookingCTA />
+</Layout>

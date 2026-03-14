@@ -1,0 +1,16 @@
+---
+interface Props {
+  style?: string;
+}
+
+const { style = '' } = Astro.props;
+---
+
+<div
+  style={`display: flex; align-items: center; justify-content: center; gap: 16px; ${style}`}
+  aria-hidden="true"
+>
+  <div class="bg-gold" style="width: 40px; height: 1px; opacity: 0.4;"></div>
+  <div class="bg-gold" style="width: 6px; height: 6px; border-radius: 50%; opacity: 0.6;"></div>
+  <div class="bg-gold" style="width: 40px; height: 1px; opacity: 0.4;"></div>
+</div>

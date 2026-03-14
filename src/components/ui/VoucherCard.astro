@@ -1,0 +1,68 @@
+---
+interface Props {
+  name: string;
+  price: number;
+  description: string;
+  includes: string[];
+  popular?: boolean;
+}
+
+const { name, price, description, includes, popular = false } = Astro.props;
+---
+
+<div
+  class={popular ? 'bg-sage' : 'bg-white'}
+  style={`padding: 40px 32px; border: 1px solid ${popular ? 'transparent' : 'var(--color-border)'}; position: relative; display: flex; flex-direction: column; height: 100%; transition: border-color 0.3s ease;`}
+  data-stagger-child
+  onmouseenter={!popular ? "this.style.borderColor='var(--color-gold)'" : undefined}
+  onmouseleave={!popular ? "this.style.borderColor='var(--color-border)'" : undefined}
+>
+  {popular && (
+    <span
+      class="bg-gold font-body"
+      style="position: absolute; top: 16px; right: 16px; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; padding: 4px 12px; color: var(--color-charcoal);"
+    >
+      Most Popular
+    </span>
+  )}
+
+  <h3
+    class={`font-heading ${popular ? 'text-cream' : ''}`}
+    style="font-size: 1.75rem; font-weight: 300; font-style: italic; margin: 0 0 6px;"
+  >
+    {name}
+  </h3>
+
+  <span
+    class={`font-body ${popular ? 'text-gold' : 'text-sage'}`}
+    style="font-size: 2rem; font-weight: 600; display: block; margin-bottom: 16px;"
+  >
+    &pound;{price}
+  </span>
+
+  <p
+    class={popular ? '' : 'text-muted'}
+    style={`font-size: 0.9rem; line-height: 1.75; margin-bottom: 24px; ${popular ? 'color: rgba(245,240,235,0.7);' : ''}`}
+  >
+    {description}
+  </p>
+
+  <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; flex: 1; margin-bottom: 32px;">
+    {includes.map((item) => (
+      <li style={`font-size: 0.85rem; display: flex; align-items: flex-start; gap: 10px; ${popular ? 'color: rgba(245,240,235,0.85);' : ''}`}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={popular ? 'var(--color-gold)' : 'var(--color-sage)'} stroke-width="2" stroke-linecap="round" style="flex-shrink: 0; margin-top: 3px;">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        {item}
+      </li>
+    ))}
+  </ul>
+
+  <a
+    href="/contact/"
+    class={`btn-primary ${popular ? 'btn-outline-light' : 'btn-outline'}`}
+    style="padding: 12px 24px; text-align: center;"
+  >
+    Purchase
+  </a>
+</div>

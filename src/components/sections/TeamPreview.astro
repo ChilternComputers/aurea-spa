@@ -1,0 +1,59 @@
+---
+import { featuredTeam } from '@/data/team';
+
+const teamImages: Record<string, string> = {
+  'Isabelle Laurent': 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=1920&q=85&fit=crop&crop=faces&auto=format',
+  'Marcus Chen': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=85&fit=crop&crop=faces&auto=format',
+  'Dr. Priya Sharma': 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1920&q=85&fit=crop&crop=faces&auto=format',
+};
+---
+
+<section style="padding: clamp(80px, 12vw, 160px) 0;" aria-label="Our team">
+  <div style="max-width: 1400px; margin: 0 auto; padding: 0 clamp(24px, 4vw, 48px);">
+
+    <div style="text-align: center; margin-bottom: clamp(48px, 6vw, 80px);" data-reveal>
+      <span class="eyebrow" style="display: block; margin-bottom: 16px;">Our Team</span>
+      <h2 style="margin: 0;">Meet Your Artists</h2>
+      <div class="line-accent" style="margin: 24px auto 0;"></div>
+    </div>
+
+    <div
+      style="display: grid; grid-template-columns: 1fr; gap: clamp(32px, 4vw, 48px);"
+      class="md:grid-cols-3"
+      data-stagger-parent
+    >
+      {featuredTeam.map((m) => (
+        <div data-stagger-child>
+          <div class="img-zoom" style="margin-bottom: 24px;">
+            <img
+              src={teamImages[m.name] || 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=1920&q=85&fit=crop&crop=faces&auto=format'}
+              alt={`Portrait of ${m.name}`}
+              loading="lazy"
+              decoding="async"
+              style="width: 100%; aspect-ratio: 3/4; object-fit: cover;"
+            />
+          </div>
+          <h3 class="font-heading" style="font-size: 1.5rem; font-weight: 300; font-style: italic; margin: 0 0 4px;">
+            {m.name}
+          </h3>
+          <span class="eyebrow text-sage" style="display: block; margin-bottom: 6px; font-size: 0.62rem;">
+            {m.role}
+          </span>
+          <span class="font-accent text-gold" style="font-size: 0.95rem; font-style: italic;">
+            {m.specialty}
+          </span>
+        </div>
+      ))}
+    </div>
+
+    <div style="text-align: center; margin-top: clamp(40px, 5vw, 64px);" data-reveal>
+      <a
+        href="/team/"
+        class="btn-primary btn-outline"
+        style="padding: 14px 40px;"
+      >
+        Meet the Full Team
+      </a>
+    </div>
+  </div>
+</section>

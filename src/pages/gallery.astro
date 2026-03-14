@@ -1,0 +1,251 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHero from '@/components/sections/PageHero.astro';
+import BookingCTA from '@/components/sections/BookingCTA.astro';
+import { galleryImages, galleryCategoryLabels, type GalleryCategory } from '@/data/gallery';
+import { getWebPageSchema } from '@/lib/schemas';
+
+const categories = Object.keys(galleryCategoryLabels) as GalleryCategory[];
+---
+
+<Layout
+  title="Gallery"
+  description="Browse our portfolio of hair transformations, skincare results, nail art, and our beautiful Marylebone salon interior."
+  schema={getWebPageSchema({
+    title: 'Gallery — AUREA',
+    description: 'See our work — hair, skin, nails, and salon interiors.',
+    url: 'https://aurea-spa.pages.dev/gallery/',
+  })}
+>
+  <PageHero
+    title="Gallery"
+    subtitle="Our Work"
+    description="A curated look at transformations, artistry, and the spaces where it all happens."
+    image="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1920&q=85&fit=crop&auto=format"
+  />
+
+  <section style="padding: clamp(60px, 8vw, 100px) 0;">
+    <div style="max-width: 1400px; margin: 0 auto; padding: 0 clamp(24px, 4vw, 48px);">
+      <!-- Filter tabs -->
+      <div
+        role="tablist"
+        aria-label="Gallery categories"
+        style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: clamp(40px, 5vw, 64px);"
+        data-reveal
+      >
+        <button
+          role="tab"
+          aria-selected="true"
+          data-gallery-tab="all"
+          class="gallery-tab btn-primary btn-fill"
+          style="padding: 8px 24px;"
+        >
+          All
+        </button>
+        {categories.map((cat) => (
+          <button
+            role="tab"
+            aria-selected="false"
+            data-gallery-tab={cat}
+            class="gallery-tab btn-primary btn-outline"
+            style="padding: 8px 24px;"
+          >
+            {galleryCategoryLabels[cat]}
+          </button>
+        ))}
+      </div>
+
+      <!-- Masonry grid with real images -->
+      <div
+        id="gallery-grid"
+        role="tabpanel"
+        aria-label="Gallery images"
+        style="columns: 2; column-gap: 6px;"
+        class="lg:columns-3"
+      >
+        {galleryImages.map((img) => (
+          <div
+            data-gallery-category={img.category}
+            class="gallery-item img-zoom"
+            style="break-inside: avoid; margin-bottom: 6px; cursor: pointer; position: relative;"
+            data-lightbox-src={img.src}
+            data-lightbox-alt={img.alt}
+            tabindex="0"
+            role="button"
+            aria-label={`View ${img.alt}`}
+          >
+            <img
+              src={img.src}
+              alt={img.alt}
+              loading="lazy"
+              decoding="async"
+              style={`width: 100%; aspect-ratio: ${img.width}/${img.height}; object-fit: cover; display: block;`}
+            />
+            <!-- Hover overlay -->
+            <div
+              class="gallery-overlay"
+              style="position: absolute; inset: 0; background: rgba(26, 26, 26, 0.6); opacity: 0; transition: opacity 0.4s ease; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px;"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-cream)" stroke-width="1.5" stroke-linecap="round">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <span class="font-body" style="font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(245,240,235,0.8);">
+                View
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Lightbox -->
+  <div
+    id="lightbox"
+    role="dialog"
+    aria-label="Image viewer"
+    aria-modal="true"
+    style="position: fixed; inset: 0; z-index: 60; background: rgba(26, 26, 26, 0.95); display: none; align-items: center; justify-content: center; cursor: pointer;"
+  >
+    <button
+      id="lightbox-close"
+      aria-label="Close image viewer"
+      style="position: absolute; top: 24px; right: 24px; background: none; border: none; cursor: pointer; z-index: 2;"
+    >
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1" stroke-linecap="round">
+        <line x1="4" y1="4" x2="20" y2="20" /><line x1="20" y1="4" x2="4" y2="20" />
+      </svg>
+    </button>
+    <div id="lightbox-content" style="max-width: 90vw; max-height: 85vh;">
+      <img id="lightbox-img" src="" alt="" style="max-width: 90vw; max-height: 85vh; object-fit: contain;" />
+    </div>
+  </div>
+
+  <BookingCTA />
+</Layout>
+
+<script>
+  // Filter tabs
+  const galleryTabs = document.querySelectorAll('.gallery-tab');
+  const galleryItems = document.querySelectorAll('.gallery-item');
+
+  galleryTabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const category = tab.getAttribute('data-gallery-tab');
+
+      galleryTabs.forEach((t) => {
+        const isActive = t === tab;
+        t.setAttribute('aria-selected', String(isActive));
+        if (isActive) {
+          (t as HTMLElement).classList.remove('btn-outline');
+          (t as HTMLElement).classList.add('btn-fill');
+        } else {
+          (t as HTMLElement).classList.remove('btn-fill');
+          (t as HTMLElement).classList.add('btn-outline');
+        }
+      });
+
+      galleryItems.forEach((item) => {
+        const el = item as HTMLElement;
+        el.style.display = (category === 'all' || item.getAttribute('data-gallery-category') === category) ? '' : 'none';
+      });
+    });
+  });
+
+  // Hover effects
+  galleryItems.forEach((item) => {
+    const overlay = item.querySelector('.gallery-overlay') as HTMLElement;
+    if (overlay) {
+      item.addEventListener('mouseenter', () => { overlay.style.opacity = '1'; });
+      item.addEventListener('mouseleave', () => { overlay.style.opacity = '0'; });
+    }
+  });
+
+  // Lightbox
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
+  const lightboxClose = document.getElementById('lightbox-close');
+  let triggerEl: Element | null = null;
+  let currentIndex = -1;
+
+  function getVisibleItems(): Element[] {
+    return Array.from(galleryItems).filter((el) => (el as HTMLElement).style.display !== 'none');
+  }
+
+  function openLightbox(item: Element) {
+    triggerEl = item;
+    const src = item.getAttribute('data-lightbox-src') || '';
+    const alt = item.getAttribute('data-lightbox-alt') || '';
+    const visible = getVisibleItems();
+    currentIndex = visible.indexOf(item);
+    if (lightbox && lightboxImg) {
+      lightboxImg.src = src.replace('w=1920', 'w=1200');
+      lightboxImg.alt = alt;
+      lightbox.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      lightboxClose?.focus();
+    }
+  }
+
+  function navigateLightbox(dir: number) {
+    const visible = getVisibleItems();
+    if (!visible.length) return;
+    currentIndex = (currentIndex + dir + visible.length) % visible.length;
+    const item = visible[currentIndex];
+    const src = item.getAttribute('data-lightbox-src') || '';
+    const alt = item.getAttribute('data-lightbox-alt') || '';
+    if (lightboxImg) {
+      lightboxImg.src = src.replace('w=1920', 'w=1200');
+      lightboxImg.alt = alt;
+    }
+  }
+
+  // Click and keyboard to open
+  galleryItems.forEach((item) => {
+    item.addEventListener('click', () => openLightbox(item));
+    item.addEventListener('keydown', (e) => {
+      if ((e as KeyboardEvent).key === 'Enter' || (e as KeyboardEvent).key === ' ') {
+        (e as KeyboardEvent).preventDefault();
+        openLightbox(item);
+      }
+    });
+  });
+
+  function closeLightbox() {
+    if (lightbox) {
+      lightbox.style.display = 'none';
+      document.body.style.overflow = '';
+      (triggerEl as HTMLElement)?.focus();
+    }
+  }
+
+  lightboxClose?.addEventListener('click', (e) => { e.stopPropagation(); closeLightbox(); });
+  lightbox?.addEventListener('click', (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (!lightbox || lightbox.style.display !== 'flex') return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowRight') navigateLightbox(1);
+    if (e.key === 'ArrowLeft') navigateLightbox(-1);
+  });
+
+  // Focus trap
+  if (lightbox) {
+    lightbox.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') return;
+      const focusable = lightbox.querySelectorAll<HTMLElement>('button');
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
+  }
+</script>
