@@ -15,12 +15,12 @@ const breadcrumbs = getBreadcrumbSchema([
 ---
 
 <Layout
-  title="Pricing"
-  description="View the full AUREA price list — hair, facials, massage, nails, and wellness treatments. Transparent pricing, no hidden extras."
+  title="Treatment Prices — Full Spa & Salon Menu"
+  description="View the full AUREA price list for hair, facials, massage, nails and wellness treatments in Marylebone. Transparent pricing, no hidden extras."
   schema={[
     getWebPageSchema({
       title: 'Pricing — AUREA',
-      description: 'Full treatment price list for AUREA spa and salon.',
+      description: 'View the full AUREA price list for hair, facials, massage, nails, and wellness treatments in Marylebone, London. Transparent pricing with no hidden extras.',
       url: `${SITE.url}/pricing/`,
     }),
     breadcrumbs,
@@ -31,7 +31,8 @@ const breadcrumbs = getBreadcrumbSchema([
     title="Pricing"
     subtitle="Treatment Menu"
     description="Transparent pricing with no hidden extras. All treatments include a consultation."
-    image="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=1920&q=85&fit=crop&auto=format"
+    image="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=1920&q=85&fit=crop&auto=format&fm=webp"
+    imageAlt="Premium hyaluronic acid serum application during AUREA facial"
   />
 
   <!-- Price List -->
@@ -109,7 +110,7 @@ const breadcrumbs = getBreadcrumbSchema([
             <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px;">
               {pkg.includes.map((item) => (
                 <li class="text-charcoal" style="font-size: 0.88rem; display: flex; align-items: center; gap: 10px;">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-gold)" stroke-width="2" stroke-linecap="round" style="flex-shrink: 0;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-gold)" stroke-width="2" stroke-linecap="round" style="flex-shrink: 0;" aria-hidden="true">
                     <polyline points="20 6 9 17 4 12"/>
                   </svg>
                   {item}
@@ -141,7 +142,7 @@ const breadcrumbs = getBreadcrumbSchema([
               style="padding: 20px 24px; cursor: pointer; font-size: 0.95rem; font-weight: 500; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 16px;"
             >
               {faq.question}
-              <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-sage)" stroke-width="2" stroke-linecap="round" style="flex-shrink: 0; transition: transform 0.3s ease;">
+              <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-sage)" stroke-width="2" stroke-linecap="round" style="flex-shrink: 0; transition: transform 0.3s ease;" aria-hidden="true">
                 <polyline points="6 9 12 15 18 9" />
               </svg>
             </summary>

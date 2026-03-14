@@ -10,5 +10,6 @@ export const navLinks: NavLink[] = [
   { label: 'Gallery', href: '/gallery/' },
   { label: 'Pricing', href: '/pricing/' },
   { label: 'Gift Vouchers', href: '/gift-vouchers/' },
+  { label: 'Booking', href: '/booking/' },
   { label: 'Contact', href: '/contact/' },
 ];

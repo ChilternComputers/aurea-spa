@@ -15,12 +15,12 @@ const breadcrumbs = getBreadcrumbSchema([
 ---
 
 <Layout
-  title="Gallery"
-  description="Browse our portfolio of hair transformations, skincare results, nail art, and our beautiful Marylebone salon interior."
+  title="Gallery — Hair, Beauty & Spa Portfolio"
+  description="Browse AUREA's portfolio of luxury hair transformations, skincare results, bespoke nail art, and our nature-inspired Marylebone salon interior. See real client results."
   schema={[
     getWebPageSchema({
       title: 'Gallery — AUREA',
-      description: 'See our work — hair, skin, nails, and salon interiors.',
+      description: 'Browse AUREA\'s portfolio of luxury hair transformations, skincare results, bespoke nail art, and our nature-inspired Marylebone salon interior. See real client results.',
       url: `${SITE.url}/gallery/`,
     }),
     breadcrumbs,
@@ -30,7 +30,8 @@ const breadcrumbs = getBreadcrumbSchema([
     title="Gallery"
     subtitle="Our Work"
     description="A curated look at transformations, artistry, and the spaces where it all happens."
-    image="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1920&q=85&fit=crop&auto=format"
+    image="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1920&q=85&fit=crop&auto=format&fm=webp"
+    imageAlt="Precision blow-dry and styling at AUREA salon, Marylebone"
   />
 
   <section style="padding: clamp(60px, 8vw, 100px) 0;">
@@ -45,9 +46,11 @@ const breadcrumbs = getBreadcrumbSchema([
         <button
           role="tab"
           aria-selected="true"
+          aria-controls="gallery-grid"
           data-gallery-tab="all"
           class="gallery-tab btn-primary btn-fill"
           style="padding: 8px 24px;"
+          tabindex="0"
         >
           All
         </button>
@@ -55,9 +58,11 @@ const breadcrumbs = getBreadcrumbSchema([
           <button
             role="tab"
             aria-selected="false"
+            aria-controls="gallery-grid"
             data-gallery-tab={cat}
             class="gallery-tab btn-primary btn-outline"
             style="padding: 8px 24px;"
+            tabindex="-1"
           >
             {galleryCategoryLabels[cat]}
           </button>
@@ -69,7 +74,7 @@ const breadcrumbs = getBreadcrumbSchema([
         id="gallery-grid"
         role="tabpanel"
         aria-label="Gallery images"
-        style="columns: 2; column-gap: 6px;"
+        style="columns: 2; column-gap: 12px;"
         class="lg:columns-3"
       >
         {galleryImages.map((img) => (
@@ -88,6 +93,8 @@ const breadcrumbs = getBreadcrumbSchema([
               srcset={`${img.src.replace('w=800', 'w=400')} 400w, ${img.src} 800w, ${img.src.replace('w=800', 'w=1200')} 1200w`}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               alt={img.alt}
+              width={img.width}
+              height={img.height}
               loading="lazy"
               decoding="async"
               style={`width: 100%; aspect-ratio: ${img.width}/${img.height}; object-fit: cover; display: block;`}
@@ -95,6 +102,7 @@ const breadcrumbs = getBreadcrumbSchema([
             <!-- Hover overlay -->
             <div
               class="gallery-overlay"
+              aria-hidden="true"
               style="position: absolute; inset: 0; background: rgba(26, 26, 26, 0.6); opacity: 0; transition: opacity 0.4s ease; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px;"
             >
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-cream)" stroke-width="1.5" stroke-linecap="round">
@@ -115,7 +123,7 @@ const breadcrumbs = getBreadcrumbSchema([
     id="lightbox"
     role="dialog"
     aria-label="Image viewer"
-    aria-modal="true"
+    aria-modal="false" aria-hidden="true"
     style="position: fixed; inset: 0; z-index: 60; background: rgba(26, 26, 26, 0.95); display: none; align-items: center; justify-content: center; cursor: pointer;"
   >
     <button
@@ -127,9 +135,23 @@ const breadcrumbs = getBreadcrumbSchema([
         <line x1="4" y1="4" x2="20" y2="20" /><line x1="20" y1="4" x2="4" y2="20" />
       </svg>
     </button>
+    <button
+      id="lightbox-prev"
+      aria-label="Previous image"
+      style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; cursor: pointer; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; z-index: 2; transition: background 0.3s ease;"
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
     <div id="lightbox-content" style="max-width: 90vw; max-height: 85vh;">
       <img id="lightbox-img" src="" alt="" style="max-width: 90vw; max-height: 85vh; object-fit: contain;" />
     </div>
+    <button
+      id="lightbox-next"
+      aria-label="Next image"
+      style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; cursor: pointer; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; z-index: 2; transition: background 0.3s ease;"
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
   </div>
 
   <BookingCTA />
@@ -146,34 +168,11 @@ const breadcrumbs = getBreadcrumbSchema([
 </style>
 
 <script>
-  // Filter tabs
-  const galleryTabs = document.querySelectorAll('.gallery-tab');
-  const galleryItems = document.querySelectorAll('.gallery-item');
-
-  galleryTabs.forEach((tab) => {
-    tab.addEventListener('click', () => {
-      const category = tab.getAttribute('data-gallery-tab');
-
-      galleryTabs.forEach((t) => {
-        const isActive = t === tab;
-        t.setAttribute('aria-selected', String(isActive));
-        if (isActive) {
-          (t as HTMLElement).classList.remove('btn-outline');
-          (t as HTMLElement).classList.add('btn-fill');
-        } else {
-          (t as HTMLElement).classList.remove('btn-fill');
-          (t as HTMLElement).classList.add('btn-outline');
-        }
-      });
-
-      galleryItems.forEach((item) => {
-        const el = item as HTMLElement;
-        el.style.display = (category === 'all' || item.getAttribute('data-gallery-category') === category) ? '' : 'none';
-      });
-    });
-  });
+  import { initTabs } from '@/lib/tabs';
+  initTabs('.gallery-tab', '.gallery-item', 'data-gallery-tab', 'data-gallery-category');
 
   // Hover effects
+  const galleryItems = document.querySelectorAll('.gallery-item');
   galleryItems.forEach((item) => {
     const overlay = item.querySelector('.gallery-overlay') as HTMLElement;
     if (overlay) {
@@ -200,10 +199,13 @@ const breadcrumbs = getBreadcrumbSchema([
     const visible = getVisibleItems();
     currentIndex = visible.indexOf(item);
     if (lightbox && lightboxImg) {
-      lightboxImg.src = src.replace('w=1920', 'w=1200');
+      lightboxImg.src = src.replace('w=800', 'w=1200');
       lightboxImg.alt = alt;
       lightbox.style.display = 'flex';
+      lightbox.setAttribute('aria-modal', 'true');
+      lightbox.removeAttribute('aria-hidden');
       document.body.style.overflow = 'hidden';
+      document.getElementById('main-content')?.toggleAttribute('inert', true);
       lightboxClose?.focus();
     }
   }
@@ -216,7 +218,7 @@ const breadcrumbs = getBreadcrumbSchema([
     const src = item.getAttribute('data-lightbox-src') || '';
     const alt = item.getAttribute('data-lightbox-alt') || '';
     if (lightboxImg) {
-      lightboxImg.src = src.replace('w=1920', 'w=1200');
+      lightboxImg.src = src.replace('w=800', 'w=1200');
       lightboxImg.alt = alt;
     }
   }
@@ -235,10 +237,19 @@ const breadcrumbs = getBreadcrumbSchema([
   function closeLightbox() {
     if (lightbox) {
       lightbox.style.display = 'none';
+      lightbox.removeAttribute('aria-modal');
+      lightbox.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
+      document.getElementById('main-content')?.removeAttribute('inert');
       (triggerEl as HTMLElement)?.focus();
     }
   }
+
+  const prevBtn = document.getElementById('lightbox-prev');
+  const nextBtn = document.getElementById('lightbox-next');
+
+  prevBtn?.addEventListener('click', (e) => { e.stopPropagation(); navigateLightbox(-1); });
+  nextBtn?.addEventListener('click', (e) => { e.stopPropagation(); navigateLightbox(1); });
 
   lightboxClose?.addEventListener('click', (e) => { e.stopPropagation(); closeLightbox(); });
   lightbox?.addEventListener('click', (e) => {

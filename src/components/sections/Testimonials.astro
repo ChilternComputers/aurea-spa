@@ -1,19 +1,33 @@
 ---
 import { testimonials } from '@/data/testimonials';
+import { IMAGES, unsplash } from '@/data/images';
 ---
 
-<section style="position: relative; padding: clamp(80px, 12vw, 160px) 0; overflow: hidden;" aria-label="Client testimonials">
+<section class="section-padding-md" style="position: relative; overflow: hidden;" aria-label="Client testimonials">
   <!-- Ambient video background — rain on water -->
-  <div style="position: absolute; inset: 0; z-index: 0;">
+  <div style="position: absolute; inset: 0; z-index: 0; aspect-ratio: 16/9;">
     <video
-      autoplay muted loop playsinline preload="metadata"
-      poster="https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=1920&q=60&fit=crop&auto=format"
+      id="testimonials-video"
+      muted loop playsinline preload="none"
+      poster={unsplash(IMAGES.testimonialsWater, 1920, 60)}
       style="width: 100%; height: 100%; object-fit: cover;"
       aria-hidden="true"
     >
-      <source src="https://assets.mixkit.co/videos/45571/45571-720.mp4" type="video/mp4" />
     </video>
-    <div style="position: absolute; inset: 0; background: rgba(10,10,10,0.8);"></div>
+    <img
+      src={unsplash(IMAGES.testimonialsWater, 1920)}
+      srcset={`${unsplash(IMAGES.testimonialsWater, 800)} 800w, ${unsplash(IMAGES.testimonialsWater, 1200)} 1200w, ${unsplash(IMAGES.testimonialsWater, 1920)} 1920w`}
+      sizes="100vw"
+      alt=""
+      role="presentation"
+      width={1920}
+      height={1080}
+      loading="lazy"
+      decoding="async"
+      style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none;"
+      data-video-fallback
+    />
+    <div style="position: absolute; inset: 0; background: var(--overlay-darkest);"></div>
   </div>
 
   <div style="position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 0 clamp(24px, 4vw, 48px);">
@@ -24,14 +38,14 @@ import { testimonials } from '@/data/testimonials';
     </div>
 
     <!-- Carousel -->
-    <div style="position: relative; overflow: hidden;" data-reveal>
+    <div style="position: relative; overflow: hidden;" data-reveal role="region" aria-roledescription="carousel" aria-label="Client testimonials, use left and right arrow keys to navigate">
       <div id="testimonial-track" aria-live="polite" style="display: flex; transition: transform 0.7s cubic-bezier(0.445, 0.05, 0.55, 0.95);">
         {testimonials.map((t) => (
           <div style="min-width: 100%; padding: 0 16px; text-align: center;">
             <!-- Stars -->
             <div style="display: flex; justify-content: center; gap: 3px; margin-bottom: 32px;" aria-label={`${t.rating} out of 5 stars`}>
               {Array.from({ length: t.rating }).map(() => (
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--color-gold)" stroke="none">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--color-gold)" stroke="none" aria-hidden="true">
                   <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                 </svg>
               ))}
@@ -45,8 +59,11 @@ import { testimonials } from '@/data/testimonials';
               <span class="font-body" style="font-size: 0.85rem; font-weight: 500; display: block; margin-bottom: 4px; color: #FFFFFF;">
                 {t.author}
               </span>
-              <span style="font-size: 0.78rem; color: rgba(197, 165, 114, 0.7);">
+              <span style="font-size: 0.78rem; color: rgba(197, 165, 114, 0.7); display: block; margin-bottom: 2px;">
                 {t.treatment}
+              </span>
+              <span style="font-size: 0.72rem; color: rgba(245, 240, 235, 0.45);">
+                {t.date}
               </span>
             </div>
           </div>
@@ -59,8 +76,8 @@ import { testimonials } from '@/data/testimonials';
           <button
             class="t-dot"
             data-index={i}
-            aria-label={`Testimonial ${i + 1}`}
-            style={`width: ${i === 0 ? '24px' : '8px'}; height: 2px; border: none; background: ${i === 0 ? 'var(--color-gold)' : 'rgba(245,240,235,0.25)'}; cursor: pointer; padding: 20px 0; background-clip: content-box; transition: all 0.4s ease;`}
+            aria-label={`Go to testimonial ${i + 1} of ${testimonials.length}`}
+            style={`width: 24px; height: 2px; border: none; background: ${i === 0 ? 'var(--color-gold)' : 'rgba(245,240,235,0.3)'}; cursor: pointer; padding: 20px 0; background-clip: content-box; transition: background 0.4s ease;`}
           />
         ))}
         <button
@@ -76,6 +93,8 @@ import { testimonials } from '@/data/testimonials';
 </section>
 
 <script>
+  import { UI } from '@/config';
+
   const track = document.getElementById('testimonial-track');
   const dots = document.querySelectorAll('.t-dot');
   const pauseBtn = document.getElementById('testimonial-pause');
@@ -86,18 +105,20 @@ import { testimonials } from '@/data/testimonials';
 
   function goTo(i: number) {
     current = i;
-    if (track) track.style.transform = `translateX(-${i * 100}%)`;
+    if (track) {
+      track.style.transform = `translateX(-${i * 100}%)`;
+      track.setAttribute('aria-label', `Testimonial ${i + 1} of ${total}`);
+    }
     dots.forEach((d, idx) => {
       const el = d as HTMLElement;
-      el.style.width = idx === i ? '24px' : '8px';
-      el.style.background = idx === i ? 'var(--color-gold)' : 'rgba(245,240,235,0.25)';
+      el.style.background = idx === i ? 'var(--color-gold)' : 'rgba(245,240,235,0.3)';
     });
   }
 
   dots.forEach(d => d.addEventListener('click', () => goTo(parseInt(d.getAttribute('data-index') || '0'))));
 
   function startTimer() {
-    timer = setInterval(() => { if (!paused) goTo((current + 1) % total); }, 6000);
+    timer = setInterval(() => { if (!paused) goTo((current + 1) % total); }, UI.carouselInterval);
   }
   startTimer();
 
@@ -110,4 +131,23 @@ import { testimonials } from '@/data/testimonials';
       pauseBtn.setAttribute('aria-label', paused ? 'Play testimonial carousel' : 'Pause testimonial carousel');
     });
   }
+
+  // Pause button hover/focus styles
+  if (pauseBtn) {
+    pauseBtn.addEventListener('mouseenter', () => { pauseBtn.style.borderColor = 'rgba(245,240,235,0.5)'; pauseBtn.style.color = 'rgba(245,240,235,0.9)'; });
+    pauseBtn.addEventListener('mouseleave', () => { pauseBtn.style.borderColor = 'rgba(245,240,235,0.25)'; pauseBtn.style.color = 'rgba(245,240,235,0.7)'; });
+  }
+
+  // Arrow key navigation
+  const carousel = track?.parentElement;
+  if (carousel) {
+    carousel.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); goTo((current + 1) % total); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); goTo((current - 1 + total) % total); }
+    });
+  }
+
+  // Defer video loading
+  import { initLazyVideo } from '@/lib/video';
+  initLazyVideo('testimonials-video', '/videos/testimonials.webm', '/videos/testimonials.mp4');
 </script>

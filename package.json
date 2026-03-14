@@ -5,12 +5,12 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "postbuild": "node -e \"const fs=require('fs'); const f='dist/sw.js'; if(fs.existsSync(f)){fs.writeFileSync(f, fs.readFileSync(f,'utf8').replace(/v3-\\d{8}/,'v3-'+new Date().toISOString().slice(0,10).replace(/-/g,'')));}\"",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.0",
-    "@lucide/astro": "^0.575.0",
     "@tailwindcss/vite": "^4.2.1",
     "astro": "^5.17.1",
     "gsap": "^3.14.2",

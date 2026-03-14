@@ -14,6 +14,7 @@ const { label, name, type = 'text', required = false, placeholder = '', options,
 const isTextarea = type === 'textarea';
 const isSelect = type === 'select';
 const inputId = `field-${name}`;
+const errorId = `${inputId}-error`;
 
 const fieldStyle = `
   padding: 11px 16px;
@@ -35,7 +36,7 @@ const focusClass = 'booking-field';
   <label
     for={inputId}
     class="font-body"
-    style="font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 500; color: var(--color-muted);"
+    style="font-size: var(--font-size-xs); letter-spacing: 0.14em; text-transform: uppercase; font-weight: 500; color: var(--color-muted);"
   >
     {label}{required && <span style="color: var(--color-gold);"> *</span>}
   </label>
@@ -45,9 +46,11 @@ const focusClass = 'booking-field';
       id={inputId}
       name={name}
       required={required}
+      aria-required={required}
       placeholder={placeholder}
       rows="5"
       class={focusClass}
+      aria-describedby={errorId}
       style={`${fieldStyle} resize: vertical; min-height: 100px; line-height: 1.7;`}
     ></textarea>
   ) : isSelect ? (
@@ -55,8 +58,10 @@ const focusClass = 'booking-field';
       id={inputId}
       name={name}
       required={required}
+      aria-required={required}
       class={focusClass}
-      style={`${fieldStyle} appearance: none; cursor: pointer; background-image: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%237a7568%22 stroke-width=%222%22 stroke-linecap=%22round%22><polyline points=%226 9 12 15 18 9%22/></svg>'); background-repeat: no-repeat; background-position: right 16px center;`}
+      aria-describedby={errorId}
+      style={`${fieldStyle} appearance: none; cursor: pointer; background-image: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23524d44%22 stroke-width=%222%22 stroke-linecap=%22round%22><polyline points=%226 9 12 15 18 9%22/></svg>'); background-repeat: no-repeat; background-position: right 16px center;`}
     >
       <option value="">{placeholder || `Select ${label.toLowerCase()}`}</option>
       {options?.map((opt) => (
@@ -69,22 +74,25 @@ const focusClass = 'booking-field';
       name={name}
       type={type}
       required={required}
+      aria-required={required}
       placeholder={placeholder}
       min={min}
       autocomplete={autocomplete}
       class={focusClass}
+      aria-describedby={errorId}
       style={fieldStyle}
     />
   )}
+  <span id={errorId} class="field-error" role="alert" style="display: none; font-size: 0.75rem; color: var(--color-gold); margin-top: 2px;"></span>
 </div>
 
 <style>
   .booking-field::placeholder {
-    color: var(--color-border);
+    color: var(--color-muted);
     font-weight: 300;
   }
   .booking-field:focus {
     border-color: var(--color-sage);
-    box-shadow: 0 0 0 3px rgba(74, 93, 78, 0.08);
+    box-shadow: 0 0 0 3px rgba(74, 93, 78, 0.2);
   }
 </style>

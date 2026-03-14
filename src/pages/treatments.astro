@@ -16,12 +16,12 @@ const breadcrumbs = getBreadcrumbSchema([
 ---
 
 <Layout
-  title="Treatments"
-  description="Explore our full range of luxury treatments — hair, facials, massage, nails, and wellness. Expert care in an intimate setting."
+  title="Luxury Hair, Beauty & Wellness Treatments"
+  description="Explore our full menu of luxury hair, facial, massage, nail and wellness treatments at AUREA Marylebone. Expert care tailored to you."
   schema={[
     getWebPageSchema({
       title: 'Treatments — AUREA',
-      description: 'Explore our full range of luxury treatments.',
+      description: 'Explore our full menu of luxury hair, facial, massage, nail, and wellness treatments at AUREA Marylebone. Expert care tailored to you in an intimate, nature-inspired setting.',
       url: `${SITE.url}/treatments/`,
     }),
     breadcrumbs,
@@ -32,7 +32,8 @@ const breadcrumbs = getBreadcrumbSchema([
     title="Our Treatments"
     subtitle="Services"
     description="Every treatment is tailored to you. From transformative colour to restorative massage, discover the full AUREA menu."
-    image="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=1920&q=85&fit=crop&auto=format"
+    image="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=1920&q=85&fit=crop&auto=format&fm=webp"
+    imageAlt="Relaxing hot stone massage at AUREA spa, Marylebone"
   />
 
   <section style="padding: clamp(60px, 8vw, 100px) 0;">
@@ -45,11 +46,11 @@ const breadcrumbs = getBreadcrumbSchema([
         style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: clamp(40px, 5vw, 64px);"
         data-reveal
       >
-        <button role="tab" aria-selected="true" data-tab="all" class="tab-btn btn-primary btn-fill" style="padding: 8px 24px;">
+        <button role="tab" aria-selected="true" aria-controls="treatment-grid" data-tab="all" class="tab-btn btn-primary btn-fill" style="padding: 8px 24px;" tabindex="0">
           All
         </button>
         {categories.map((cat) => (
-          <button role="tab" aria-selected="false" data-tab={cat} class="tab-btn btn-primary btn-outline" style="padding: 8px 24px;">
+          <button role="tab" aria-selected="false" aria-controls="treatment-grid" data-tab={cat} class="tab-btn btn-primary btn-outline" style="padding: 8px 24px;" tabindex="-1">
             {categoryLabels[cat]}
           </button>
         ))}
@@ -81,29 +82,6 @@ const breadcrumbs = getBreadcrumbSchema([
 </Layout>
 
 <script>
-  const tabs = document.querySelectorAll('.tab-btn');
-  const items = document.querySelectorAll('.treatment-item');
-
-  tabs.forEach((tab) => {
-    tab.addEventListener('click', () => {
-      const category = tab.getAttribute('data-tab');
-
-      tabs.forEach((t) => {
-        const isActive = t === tab;
-        t.setAttribute('aria-selected', String(isActive));
-        if (isActive) {
-          (t as HTMLElement).classList.remove('btn-outline');
-          (t as HTMLElement).classList.add('btn-fill');
-        } else {
-          (t as HTMLElement).classList.remove('btn-fill');
-          (t as HTMLElement).classList.add('btn-outline');
-        }
-      });
-
-      items.forEach((item) => {
-        const el = item as HTMLElement;
-        el.style.display = (category === 'all' || item.getAttribute('data-category') === category) ? '' : 'none';
-      });
-    });
-  });
+  import { initTabs } from '@/lib/tabs';
+  initTabs('.tab-btn', '.treatment-item', 'data-tab', 'data-category');
 </script>

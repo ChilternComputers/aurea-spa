@@ -5,6 +5,7 @@ import Divider from '@/components/ui/Divider.astro';
 import BookingCTA from '@/components/sections/BookingCTA.astro';
 import { getWebPageSchema, getBreadcrumbSchema } from '@/lib/schemas';
 import { SITE } from '@/config';
+import { team } from '@/data/team';
 
 const breadcrumbs = getBreadcrumbSchema([
   { name: 'Home', url: SITE.url },
@@ -13,12 +14,12 @@ const breadcrumbs = getBreadcrumbSchema([
 ---
 
 <Layout
-  title="About"
-  description="Discover the story behind AUREA — our philosophy, our founder, and our commitment to redefining beauty and wellness in Marylebone."
+  title="About — Luxury Spa & Salon, Marylebone"
+  description="Discover the story behind AUREA — founded by Vidal Sassoon-trained stylist Isabelle Laurent. Our philosophy, awards and commitment to wellness."
   schema={[
     getWebPageSchema({
       title: 'About — AUREA',
-      description: 'The story behind AUREA luxury spa and salon.',
+      description: 'Discover the story behind AUREA — founded by Vidal Sassoon-trained stylist Isabelle Laurent. Our philosophy, awards, and commitment to redefining beauty and wellness in Marylebone, London.',
       url: `${SITE.url}/about/`,
     }),
     breadcrumbs,
@@ -28,7 +29,8 @@ const breadcrumbs = getBreadcrumbSchema([
     title="Our Story"
     subtitle="About AUREA"
     description="A space created to restore, transform, and inspire."
-    image="https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=1920&q=85&fit=crop&auto=format"
+    image="https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=1920&q=85&fit=crop&auto=format&fm=webp"
+    imageAlt="Nature-inspired wellness atmosphere inside AUREA spa"
   />
 
   <!-- Founder section -->
@@ -38,8 +40,12 @@ const breadcrumbs = getBreadcrumbSchema([
         <div data-reveal>
           <div class="img-zoom">
             <img
-              src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=1920&q=85&fit=crop&crop=faces&auto=format"
+              src={team[0].image}
+              srcset={`${team[0].image.replace('w=800', 'w=400')} 400w, ${team[0].image} 800w`}
+              sizes="(max-width: 1024px) 100vw, 50vw"
               alt="Isabelle Laurent, Founder of AUREA"
+              width={600}
+              height={800}
               loading="lazy"
               decoding="async"
               style="width: 100%; aspect-ratio: 3/4; object-fit: cover;"

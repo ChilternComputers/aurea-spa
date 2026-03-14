@@ -1,5 +1,5 @@
 ---
-
+import { IMAGES, unsplash } from '@/data/images';
 ---
 
 <!-- Hero: Full viewport, looping ambient video with image fallback -->
@@ -9,7 +9,7 @@
   aria-label="Welcome to AUREA"
 >
   <!-- Background: Video + Image fallback -->
-  <div style="position: absolute; inset: 0; z-index: 0;">
+  <div style="position: absolute; inset: 0; z-index: 0; aspect-ratio: 16/9;">
     <!-- Ambient video — candle bokeh -->
     <video
       id="hero-video"
@@ -17,7 +17,7 @@
       loop
       playsinline
       preload="none"
-      poster="https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=1920&q=60&fit=crop&auto=format"
+      poster={unsplash(IMAGES.heroCandle, 1920, 60)}
       style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.1);"
       aria-hidden="true"
     >
@@ -26,9 +26,13 @@
     <!-- Static image fallback (shown if video fails or on reduced motion) -->
     <img
       id="hero-fallback"
-      src="https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=1920&q=85&fit=crop&auto=format"
-      alt=""
-      role="presentation"
+      src={unsplash(IMAGES.heroCandle, 1920)}
+      srcset={`${unsplash(IMAGES.heroCandle, 800)} 800w, ${unsplash(IMAGES.heroCandle, 1200)} 1200w, ${unsplash(IMAGES.heroCandle, 1920)} 1920w`}
+      sizes="100vw"
+      alt="Candlelit ambience at AUREA luxury spa, Marylebone"
+      width={1920}
+      height={1080}
+      fetchpriority="high"
       loading="eager"
       decoding="async"
       style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none;"
@@ -42,14 +46,14 @@
   <div style="position: relative; z-index: 1; text-align: center; max-width: 900px; padding: 0 24px;">
     <span
       class="eyebrow"
-      style="display: block; margin-bottom: 28px; opacity: 0; color: rgba(197, 165, 114, 0.85); text-shadow: 0 1px 8px rgba(0,0,0,0.4);"
+      style="display: block; margin-bottom: 28px; color: rgba(197, 165, 114, 0.85); text-shadow: 0 1px 8px rgba(0,0,0,0.4);"
       data-hero-el
     >
       Luxury Spa &amp; Salon &mdash; Marylebone
     </span>
 
     <h1
-      style="margin: 0 0 28px; opacity: 0; color: #FFFFFF; text-shadow: 0 2px 20px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.3);"
+      style="margin: 0 0 28px; color: #FFFFFF; text-shadow: 0 2px 20px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.3);"
       data-hero-el
     >
       Where Beauty<br>Finds Its Light
@@ -57,25 +61,27 @@
 
     <p
       class="font-body"
-      style="font-size: clamp(1.05rem, 1.6vw, 1.2rem); line-height: 1.9; max-width: 520px; margin: 0 auto 48px; font-weight: 300; opacity: 0; color: rgba(255,255,255,0.88); text-shadow: 0 1px 8px rgba(0,0,0,0.4);"
+      style="font-size: clamp(1.05rem, 1.6vw, 1.2rem); line-height: 1.9; max-width: 520px; margin: 0 auto 48px; font-weight: 300; color: rgba(255,255,255,0.88); text-shadow: 0 1px 8px rgba(0,0,0,0.4);"
       data-hero-el
     >
       An intimate sanctuary for hair, skin, and wellbeing.<br>
       Expert artistry in a setting designed to restore.
     </p>
 
-    <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; opacity: 0;" data-hero-el>
+    <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;" data-hero-el>
       <a
         href="/booking/"
         class="btn-primary"
-        style="padding: 14px 40px; background: rgba(245,240,235,0.12); border: 1px solid rgba(255,255,255,0.6); color: #FFFFFF; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);"
+        aria-label="Book your visit at AUREA spa"
+        style="background: rgba(245,240,235,0.12); border: 1px solid rgba(255,255,255,0.6); color: #FFFFFF; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);"
       >
         Book Your Visit
       </a>
       <a
         href="/treatments/"
         class="btn-primary"
-        style="padding: 14px 40px; background: transparent; border: 1px solid rgba(255,255,255,0.35); color: rgba(255,255,255,0.85);"
+        aria-label="Browse our full treatment menu"
+        style="background: transparent; border: 1px solid rgba(255,255,255,0.35); color: rgba(255,255,255,0.85);"
       >
         Our Treatments
       </a>
@@ -84,7 +90,7 @@
 
   <!-- Scroll indicator -->
   <div
-    style="position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 10px; opacity: 0;"
+    style="position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 10px;"
     data-hero-el
     aria-hidden="true"
   >
@@ -104,9 +110,7 @@
 </style>
 
 <script>
-  import { gsap } from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
-  gsap.registerPlugin(ScrollTrigger);
+  import { initLazyVideo } from '@/lib/video';
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const video = document.getElementById('hero-video') as HTMLVideoElement;
@@ -118,28 +122,17 @@
       video.style.display = 'none';
       fallback.style.display = 'block';
     } else {
-      // Defer video load to after page load — don't compete with LCP
-      const loadVideo = () => {
-        const source = document.createElement('source');
-        source.src = 'https://assets.mixkit.co/videos/14350/14350-720.mp4';
-        source.type = 'video/mp4';
-        video.appendChild(source);
-        video.load();
-        video.play().catch(() => {
-          video.style.display = 'none';
-          fallback.style.display = 'block';
-        });
-      };
       video.addEventListener('error', () => {
         video.style.display = 'none';
         fallback.style.display = 'block';
       });
-      if (document.readyState === 'complete') loadVideo();
-      else window.addEventListener('load', loadVideo);
+      initLazyVideo('hero-video', '/videos/hero.webm', '/videos/hero.mp4', { trigger: 'load' });
     }
   }
 
   if (!prefersReducedMotion) {
+    const { gsap } = await import('gsap');
+
     // Staggered hero entrance
     const heroEls = document.querySelectorAll('[data-hero-el]');
     gsap.fromTo(
@@ -170,9 +163,5 @@
         },
       });
     }
-  } else {
-    document.querySelectorAll('[data-hero-el]').forEach(el => {
-      (el as HTMLElement).style.opacity = '1';
-    });
   }
 </script>

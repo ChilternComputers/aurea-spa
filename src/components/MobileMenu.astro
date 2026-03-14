@@ -30,7 +30,7 @@ const currentPath = Astro.url.pathname;
       aria-label="Close menu"
       style="position: absolute; top: 24px; right: clamp(24px, 4vw, 48px); background: none; border: none; cursor: pointer; padding: 8px; z-index: 2;"
     >
-      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="var(--color-cream)" stroke-width="1" stroke-linecap="round">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="var(--color-cream)" stroke-width="1" stroke-linecap="round" aria-hidden="true">
         <line x1="4" y1="4" x2="24" y2="24" />
         <line x1="24" y1="4" x2="4" y2="24" />
       </svg>
@@ -77,7 +77,11 @@ const currentPath = Astro.url.pathname;
 </div>
 
 <script>
-  import { gsap } from 'gsap';
+  let _gsap: typeof import('gsap')['gsap'] | null = null;
+  async function getGsap() {
+    if (!_gsap) _gsap = (await import('gsap')).gsap;
+    return _gsap;
+  }
 
   const menuToggle = document.getElementById('menu-toggle');
   const menuClose = document.getElementById('menu-close');
@@ -89,15 +93,17 @@ const currentPath = Astro.url.pathname;
   const mobileFooter = document.querySelector('[data-mobile-footer]');
   let isOpen = false;
 
-  function openMenu() {
+  async function openMenu() {
     if (!mobileMenu || !panel || !backdrop || isOpen) return;
     isOpen = true;
+    const gsap = await getGsap();
 
     mobileMenu.style.pointerEvents = 'auto';
     mobileMenu.style.visibility = 'visible';
     mobileMenu.setAttribute('aria-modal', 'true');
     document.body.style.overflow = 'hidden';
     menuToggle?.setAttribute('aria-expanded', 'true');
+    document.getElementById('main-content')?.toggleAttribute('inert', true);
 
     // Animate in
     gsap.to(backdrop, { opacity: 1, duration: 0.4 });
@@ -117,13 +123,15 @@ const currentPath = Astro.url.pathname;
     menuClose?.focus();
   }
 
-  function closeMenu() {
+  async function closeMenu() {
     if (!mobileMenu || !panel || !backdrop || !isOpen) return;
     isOpen = false;
+    const gsap = await getGsap();
 
     menuToggle?.setAttribute('aria-expanded', 'false');
     mobileMenu.removeAttribute('aria-modal');
     document.body.style.overflow = '';
+    document.getElementById('main-content')?.removeAttribute('inert');
 
     gsap.to(panel, { opacity: 0, duration: 0.3 });
     gsap.to(backdrop, { opacity: 0, duration: 0.3, onComplete: () => {

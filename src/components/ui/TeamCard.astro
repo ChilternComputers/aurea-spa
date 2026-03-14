@@ -8,23 +8,16 @@ interface Props {
 }
 
 const { name, role, specialty, bio, image } = Astro.props;
-
-const teamImages: Record<string, string> = {
-  'Isabelle Laurent': 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=1920&q=85&fit=crop&crop=faces&auto=format',
-  'Marcus Chen': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=85&fit=crop&crop=faces&auto=format',
-  'Dr. Priya Sharma': 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1920&q=85&fit=crop&crop=faces&auto=format',
-  'Elena Voss': 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=1920&q=85&fit=crop&crop=faces&auto=format',
-  'Amara Osei': 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=1920&q=85&fit=crop&crop=faces&auto=format',
-  'James Whitfield': 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=1920&q=85&fit=crop&crop=faces&auto=format',
-};
-
-const imgSrc = teamImages[name] || 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=1920&q=85&fit=crop&crop=faces&auto=format';
 ---
 
 <div data-stagger-child>
   <div class="img-zoom" style="margin-bottom: 24px;">
     <img
-      src={imgSrc}
+      src={image}
+      srcset={`${image.replace('w=800', 'w=400')} 400w, ${image} 800w`}
+      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+      width={600}
+      height={800}
       alt={`Portrait of ${name}`}
       loading="lazy"
       decoding="async"

@@ -23,3 +23,9 @@ export const SITE = {
     tiktok: 'https://tiktok.com/@aureaspa',
   },
 } as const;
+
+export const UI = {
+  carouselInterval: 8000,
+  navScrollThreshold: 60,
+  navHideThreshold: 300,
+} as const;

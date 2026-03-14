@@ -3,6 +3,25 @@ import { testimonials } from '@/data/testimonials';
 import type { Treatment } from '@/data/treatments';
 import type { TeamMember } from '@/data/team';
 
+const MONTHS: Record<string, string> = {
+  January: '01', February: '02', March: '03', April: '04',
+  May: '05', June: '06', July: '07', August: '08',
+  September: '09', October: '10', November: '11', December: '12',
+};
+
+function parseReviewDate(date: string): string {
+  const [month, year] = date.split(' ');
+  return `${year}-${MONTHS[month] || '01'}-01`;
+}
+
+function parseDuration(dur: string): string {
+  if (dur.includes('hour')) {
+    const h = parseInt(dur);
+    return `PT${h}H`;
+  }
+  return `PT${dur.replace(' min', 'M')}`;
+}
+
 export function getBusinessSchema() {
   return {
     '@context': 'https://schema.org',
@@ -15,15 +34,15 @@ export function getBusinessSchema() {
     address: {
       '@type': 'PostalAddress',
       streetAddress: SITE.address.street,
-      addressLocality: SITE.address.city,
-      addressRegion: SITE.address.area,
+      addressLocality: SITE.address.area,
+      addressRegion: SITE.address.city,
       postalCode: SITE.address.postcode,
       addressCountry: 'GB',
     },
     geo: {
       '@type': 'GeoCoordinates',
-      latitude: '51.5189',
-      longitude: '-0.1497',
+      latitude: 51.5189,
+      longitude: -0.1497,
     },
     openingHoursSpecification: [
       {
@@ -50,7 +69,7 @@ export function getBusinessSchema() {
     sameAs: [SITE.social.instagram, SITE.social.facebook, SITE.social.tiktok],
     aggregateRating: {
       '@type': 'AggregateRating',
-      ratingValue: '5',
+      ratingValue: String((testimonials.reduce((sum, t) => sum + t.rating, 0) / testimonials.length).toFixed(2)),
       reviewCount: String(testimonials.length),
       bestRating: '5',
       worstRating: '1',
@@ -64,6 +83,7 @@ export function getBusinessSchema() {
       },
       author: { '@type': 'Person', name: t.author },
       reviewBody: t.quote,
+      datePublished: parseReviewDate(t.date),
     })),
   };
 }
@@ -92,11 +112,16 @@ export function getServiceSchema(treatments: Treatment[]) {
       name: SITE.name,
       url: SITE.url,
     },
+    areaServed: {
+      '@type': 'City',
+      name: 'London',
+    },
     offers: {
       '@type': 'Offer',
       price: String(t.price),
       priceCurrency: 'GBP',
     },
+    duration: parseDuration(t.duration),
   }));
 }
 
@@ -129,6 +154,23 @@ export function getFAQSchema(faqs: { question: string; answer: string }[]) {
       },
     })),
   };
+}
+
+export function getProductSchema(vouchers: { name: string; price: number; description: string }[]) {
+  return vouchers.map((v) => ({
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: `${v.name} Gift Voucher`,
+    description: v.description,
+    brand: { '@type': 'Brand', name: SITE.name },
+    offers: {
+      '@type': 'Offer',
+      price: String(v.price),
+      priceCurrency: 'GBP',
+      availability: 'https://schema.org/InStock',
+      url: `${SITE.url}/gift-vouchers/`,
+    },
+  }));
 }
 
 export function getWebPageSchema(page: { title: string; description: string; url: string }) {

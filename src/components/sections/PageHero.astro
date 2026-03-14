@@ -4,10 +4,11 @@ interface Props {
   subtitle?: string;
   description?: string;
   image?: string;
+  imageAlt?: string;
 }
 
-const { title, subtitle, description, image } = Astro.props;
-const bgImage = image || 'https://images.unsplash.com/photo-1596178065887-1198b6148b2b?w=1920&q=85&fit=crop&auto=format';
+const { title, subtitle, description, image, imageAlt = '' } = Astro.props;
+const bgImage = image || 'https://images.unsplash.com/photo-1596178065887-1198b6148b2b?w=1920&q=85&fit=crop&auto=format&fm=webp';
 ---
 
 <section style="position: relative; padding: clamp(140px, 18vw, 220px) 0 clamp(80px, 10vw, 120px); overflow: hidden;">
@@ -15,8 +16,12 @@ const bgImage = image || 'https://images.unsplash.com/photo-1596178065887-1198b6
   <div style="position: absolute; inset: 0; z-index: 0;">
     <img
       src={bgImage}
-      alt=""
-      role="presentation"
+      srcset={`${bgImage.replace('w=1920', 'w=800')} 800w, ${bgImage.replace('w=1920', 'w=1200')} 1200w, ${bgImage} 1920w`}
+      sizes="100vw"
+      alt={imageAlt}
+      width={1920}
+      height={1080}
+      fetchpriority="high"
       loading="eager"
       decoding="async"
       style="width: 100%; height: 100%; object-fit: cover;"

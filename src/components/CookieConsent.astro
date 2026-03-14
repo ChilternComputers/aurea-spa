@@ -3,6 +3,7 @@
   id="cookie-consent"
   role="dialog"
   aria-label="Cookie consent"
+  aria-modal="false"
   style="display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999; background: #4A5D4E; border-top: 1px solid rgba(197, 165, 114, 0.3); padding: 20px 24px;"
 >
   <div style="max-width: 960px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
@@ -36,11 +37,18 @@
 
   if (banner && !document.cookie.split(';').some(c => c.trim().startsWith('cookie_consent='))) {
     banner.style.display = 'block';
+    banner.setAttribute('aria-modal', 'true');
+    document.getElementById('main-content')?.toggleAttribute('inert', true);
+    setTimeout(() => acceptBtn?.focus(), 100);
   }
 
   function dismiss(value: string) {
     document.cookie = 'cookie_consent=' + value + '; max-age=31536000; path=/; SameSite=Lax';
-    if (banner) banner.style.display = 'none';
+    if (banner) {
+      banner.style.display = 'none';
+      banner.setAttribute('aria-modal', 'false');
+      document.getElementById('main-content')?.removeAttribute('inert');
+    }
   }
 
   acceptBtn?.addEventListener('click', () => dismiss('accepted'));
@@ -51,4 +59,21 @@
       dismiss('declined');
     }
   });
+
+  // Focus trap within cookie banner
+  if (banner && acceptBtn && declineBtn) {
+    banner.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') return;
+      const focusable = Array.from(banner.querySelectorAll<HTMLElement>('a[href], button'));
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    });
+  }
 </script>

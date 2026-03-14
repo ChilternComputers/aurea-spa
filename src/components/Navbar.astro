@@ -48,8 +48,8 @@ const currentPath = Astro.url.pathname;
       <div style="display: flex; align-items: center; gap: 24px; z-index: 10;">
         <a
           href="/booking/"
-          class="hidden lg:inline-flex btn-primary btn-outline-light"
-          style="padding: 10px 28px; transition: all 0.4s ease;"
+          class="hidden lg:inline-flex btn-primary btn-outline-light btn-sm"
+          style="transition: all 0.4s ease;"
           id="book-btn"
         >
           Book Now
@@ -62,11 +62,11 @@ const currentPath = Astro.url.pathname;
           aria-label="Open menu"
           aria-expanded="false"
           aria-controls="mobile-menu"
-          style="background: none; border: none; cursor: pointer; padding: 8px; z-index: 10; position: relative; width: 32px; height: 24px;"
+          style="background: none; border: none; cursor: pointer; padding: 10px; z-index: 10; position: relative; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;"
         >
-          <span style="position: absolute; left: 0; width: 32px; height: 1px; background: var(--color-cream); transition: all 0.4s ease; top: 4px;" class="hamburger-line" id="ham-1"></span>
-          <span style="position: absolute; left: 0; width: 20px; height: 1px; background: var(--color-cream); transition: all 0.4s ease; top: 12px;" class="hamburger-line" id="ham-2"></span>
-          <span style="position: absolute; left: 0; width: 26px; height: 1px; background: var(--color-cream); transition: all 0.4s ease; top: 20px;" class="hamburger-line" id="ham-3"></span>
+          <span style="position: absolute; left: 6px; width: 32px; height: 1px; background: var(--color-cream); transition: all 0.4s ease; top: 10px;" class="hamburger-line" id="ham-1"></span>
+          <span style="position: absolute; left: 6px; width: 20px; height: 1px; background: var(--color-cream); transition: all 0.4s ease; top: 22px;" class="hamburger-line" id="ham-2"></span>
+          <span style="position: absolute; left: 6px; width: 26px; height: 1px; background: var(--color-cream); transition: all 0.4s ease; top: 34px;" class="hamburger-line" id="ham-3"></span>
         </button>
       </div>
     </nav>
@@ -74,6 +74,8 @@ const currentPath = Astro.url.pathname;
 </header>
 
 <script>
+  import { UI } from '@/config';
+
   const navbar = document.getElementById('navbar');
   const navInner = document.getElementById('nav-inner');
   const logoText = document.getElementById('logo-text');
@@ -89,12 +91,12 @@ const currentPath = Astro.url.pathname;
 
     if (!navbar || !navInner || !logoText) return;
 
-    if (y > 60 && !scrolled) {
+    if (y > UI.navScrollThreshold && !scrolled) {
       scrolled = true;
       // Frosted glass, dark text
       navbar.style.backgroundColor = 'rgba(245, 240, 235, 0.88)';
       navbar.style.backdropFilter = 'blur(24px) saturate(180%)';
-      (navbar.style as any).WebkitBackdropFilter = 'blur(24px) saturate(180%)';
+      navbar.style.setProperty('-webkit-backdrop-filter', 'blur(24px) saturate(180%)');
       navInner.style.borderBottomColor = 'rgba(227, 221, 214, 0.6)';
       logoText.style.color = 'var(--color-charcoal)';
 
@@ -111,11 +113,11 @@ const currentPath = Astro.url.pathname;
         bookBtn.classList.remove('btn-outline-light');
         bookBtn.classList.add('btn-outline');
       }
-    } else if (y <= 60 && scrolled) {
+    } else if (y <= UI.navScrollThreshold && scrolled) {
       scrolled = false;
       navbar.style.backgroundColor = 'transparent';
       navbar.style.backdropFilter = 'none';
-      (navbar.style as any).WebkitBackdropFilter = 'none';
+      navbar.style.setProperty('-webkit-backdrop-filter', 'none');
       navInner.style.borderBottomColor = 'rgba(245, 240, 235, 0.15)';
       logoText.style.color = 'var(--color-cream)';
 
@@ -135,7 +137,7 @@ const currentPath = Astro.url.pathname;
     }
 
     // Hide on scroll down, show on scroll up
-    if (y > lastScroll && y > 300) {
+    if (y > lastScroll && y > UI.navHideThreshold) {
       navbar.style.transform = 'translateY(-100%)';
     } else {
       navbar.style.transform = 'translateY(0)';

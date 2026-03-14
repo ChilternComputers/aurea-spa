@@ -1,15 +1,17 @@
 ---
-const galleryPreviewImages = [
-  { src: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=1920&q=85&fit=crop&auto=format', alt: 'Balayage highlights result', tall: true },
-  { src: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1920&q=85&fit=crop&auto=format', alt: 'Hair styling session', tall: false },
-  { src: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=1920&q=85&fit=crop&auto=format', alt: 'Radiant skin after facial', tall: false },
-  { src: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=1920&q=85&fit=crop&auto=format', alt: 'Luxury nail art', tall: true },
-  { src: 'https://images.unsplash.com/photo-1596178065887-1198b6148b2b?w=1920&q=85&fit=crop&auto=format', alt: 'Spa treatment room', tall: false },
-  { src: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=1920&q=85&fit=crop&auto=format', alt: 'Relaxing massage therapy', tall: false },
-];
+import { galleryImages } from '@/data/gallery';
+
+const tallCategories = new Set(['hair', 'nails']);
+const galleryPreviewImages = galleryImages.slice(0, 6).map((img) => ({
+  src: img.src,
+  alt: img.alt,
+  tall: tallCategories.has(img.category) && img.height > img.width,
+  width: img.width,
+  height: img.height,
+}));
 ---
 
-<section class="bg-white" style="padding: clamp(80px, 12vw, 160px) 0;" aria-label="Gallery preview">
+<section class="bg-white section-padding-md" aria-label="Gallery preview">
   <div style="max-width: 1400px; margin: 0 auto; padding: 0 clamp(24px, 4vw, 48px);">
 
     <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: clamp(40px, 5vw, 64px); flex-wrap: wrap; gap: 24px;" data-reveal>
@@ -23,7 +25,7 @@ const galleryPreviewImages = [
         style="font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 500; display: inline-flex; align-items: center; gap: 10px;"
       >
         View Full Gallery
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </a>
     </div>
 
@@ -41,7 +43,11 @@ const galleryPreviewImages = [
         >
           <img
             src={img.src}
+            srcset={`${img.src.replace('w=800', 'w=400')} 400w, ${img.src} 800w`}
+            sizes="(max-width: 640px) 50vw, 33vw"
             alt={img.alt}
+            width={img.width}
+            height={img.height}
             loading="lazy"
             decoding="async"
             style={`width: 100%; height: 100%; object-fit: cover; ${img.tall ? 'min-height: 400px;' : 'aspect-ratio: 4/3;'}`}

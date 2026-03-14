@@ -14,16 +14,15 @@ const breadcrumbs = getBreadcrumbSchema([
 
 const treatmentNames = treatments.map((t) => t.name);
 const teamNames = team.map((m) => m.name);
-const today = new Date().toISOString().split('T')[0];
 ---
 
 <Layout
-  title="Booking"
-  description="Book your appointment at AUREA. Choose your treatment, select your stylist, and reserve your time slot online."
+  title="Book an Appointment — Spa, Marylebone"
+  description="Book your appointment at AUREA luxury spa and salon in Marylebone, London. Choose from 24 treatments, select your preferred stylist, and reserve your time slot online."
   schema={[
     getWebPageSchema({
       title: 'Book an Appointment — AUREA',
-      description: 'Book your luxury spa or salon appointment online.',
+      description: 'Book your appointment at AUREA luxury spa and salon in Marylebone, London. Choose from 24 treatments, select your preferred stylist, and reserve your time slot online.',
       url: `${SITE.url}/booking/`,
     }),
     breadcrumbs,
@@ -33,7 +32,8 @@ const today = new Date().toISOString().split('T')[0];
     title="Book Your Visit"
     subtitle="Appointments"
     description="Reserve your treatment online. We'll confirm your booking within 2 hours."
-    image="https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=1920&q=85&fit=crop&auto=format"
+    image="https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=1920&q=85&fit=crop&auto=format&fm=webp"
+    imageAlt="AUREA relaxation lounge with botanical accents and natural light"
   />
 
   <section style="padding: clamp(48px, 6vw, 80px) 0;">
@@ -85,7 +85,7 @@ const today = new Date().toISOString().split('T')[0];
 
         <!-- Date & time row -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-          <Input label="Preferred Date" name="date" type="date" required min={today} />
+          <Input label="Preferred Date" name="date" type="date" required />
           <Input
             label="Preferred Time"
             name="time"
@@ -114,7 +114,7 @@ const today = new Date().toISOString().split('T')[0];
         </button>
 
         <!-- Form message -->
-        <div id="form-message" style="display: none; text-align: center; padding: 14px; font-size: 0.85rem; line-height: 1.7;"></div>
+        <div id="form-message" role="status" aria-live="polite" style="display: none; text-align: center; padding: 14px; font-size: 0.85rem; line-height: 1.7;"></div>
       </form>
 
       <!-- Divider -->
@@ -149,29 +149,57 @@ const today = new Date().toISOString().split('T')[0];
   const form = document.getElementById('booking-form') as HTMLFormElement;
   const message = document.getElementById('form-message');
 
+  // Set date min to today (client-side, not stale build date)
+  const dateField = form?.querySelector('[name="date"]') as HTMLInputElement;
+  if (dateField) {
+    dateField.min = new Date().toISOString().split('T')[0];
+  }
+
+  function clearFieldError(input: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement) {
+    input.style.borderColor = '';
+    input.removeAttribute('aria-invalid');
+    const errorEl = document.getElementById(`${input.id}-error`);
+    if (errorEl) { errorEl.style.display = 'none'; errorEl.textContent = ''; }
+  }
+
+  function setFieldError(input: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement, msg: string) {
+    input.style.borderColor = 'var(--color-gold)';
+    input.setAttribute('aria-invalid', 'true');
+    const errorEl = document.getElementById(`${input.id}-error`);
+    if (errorEl) { errorEl.style.display = 'block'; errorEl.textContent = msg; }
+  }
+
   form?.addEventListener('submit', (e) => {
     e.preventDefault();
 
+    // Clear all previous errors
+    form.querySelectorAll('.field-error').forEach((el) => {
+      (el as HTMLElement).style.display = 'none';
+      el.textContent = '';
+    });
+
     const required = form.querySelectorAll('[required]');
     let valid = true;
+    const invalidFields: string[] = [];
 
     required.forEach((field) => {
       const input = field as HTMLInputElement | HTMLSelectElement;
       if (!input.value.trim()) {
         valid = false;
-        input.style.borderColor = 'var(--color-gold)';
-        input.setAttribute('aria-invalid', 'true');
+        const label = form.querySelector(`label[for="${input.id}"]`);
+        const fieldName = label?.textContent?.replace(' *', '').trim() || input.name;
+        invalidFields.push(fieldName);
+        setFieldError(input, `${fieldName} is required.`);
       } else {
-        input.style.borderColor = '';
-        input.removeAttribute('aria-invalid');
+        clearFieldError(input);
       }
     });
 
     const emailField = form.querySelector('[name="email"]') as HTMLInputElement;
     if (emailField && emailField.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailField.value)) {
       valid = false;
-      emailField.style.borderColor = 'var(--color-gold)';
-      emailField.setAttribute('aria-invalid', 'true');
+      invalidFields.push('Email (invalid format)');
+      setFieldError(emailField, 'Please enter a valid email address.');
     }
 
     if (!valid) {
@@ -179,8 +207,13 @@ const today = new Date().toISOString().split('T')[0];
         message.style.display = 'block';
         message.style.color = 'var(--color-gold)';
         message.style.background = 'rgba(197, 165, 114, 0.08)';
-        message.textContent = 'Please complete all required fields.';
+        message.setAttribute('role', 'alert');
+        message.textContent = invalidFields.length
+          ? `Please complete: ${invalidFields.join(', ')}.`
+          : 'Please complete all required fields.';
       }
+      const firstInvalid = form.querySelector('[aria-invalid="true"]') as HTMLElement;
+      firstInvalid?.focus();
       return;
     }
 

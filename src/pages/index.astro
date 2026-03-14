@@ -7,12 +7,14 @@ import Testimonials from '@/components/sections/Testimonials.astro';
 import BookingCTA from '@/components/sections/BookingCTA.astro';
 import { SITE } from '@/config';
 import { getBusinessSchema } from '@/lib/schemas';
+import { IMAGES, unsplash } from '@/data/images';
 ---
 
 <Layout
   title="Home"
   description={SITE.description}
   schema={getBusinessSchema()}
+  preloadImage={unsplash(IMAGES.heroCandle, 1920, 60)}
 >
   <Hero />
   <AboutPreview />

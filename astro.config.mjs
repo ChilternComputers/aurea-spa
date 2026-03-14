@@ -9,7 +9,15 @@ export default defineConfig({
   build: {
     inlineStylesheets: 'always',
   },
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      filter: (page) => !['/privacy/', '/terms/', '/accessibility/', '/404/'].some((p) => page.includes(p)),
+      serialize(item) {
+        item.lastmod = new Date().toISOString();
+        return item;
+      },
+    }),
+  ],
   vite: {
     plugins: [tailwindcss()],
   },
