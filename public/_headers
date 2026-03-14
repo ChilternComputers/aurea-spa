@@ -23,3 +23,6 @@
 
 /favicon.svg
   Cache-Control: public, max-age=2592000
+
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
