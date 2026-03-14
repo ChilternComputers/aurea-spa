@@ -154,6 +154,6 @@ const currentPath = Astro.url.pathname;
     }
   }, { passive: true });
 
-  // Initial state — check if already scrolled on page load
-  updateNavbar();
+  // Initial state — check if already scrolled on page load (rAF avoids forced reflow)
+  requestAnimationFrame(updateNavbar);
 </script>
