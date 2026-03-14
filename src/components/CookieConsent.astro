@@ -3,7 +3,6 @@
   id="cookie-consent"
   role="dialog"
   aria-label="Cookie consent"
-  aria-modal="false"
   style="display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999; background: #4A5D4E; border-top: 1px solid rgba(197, 165, 114, 0.3); padding: 20px 24px;"
 >
   <div style="max-width: 960px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
@@ -43,10 +42,10 @@
   }
 
   function dismiss(value: string) {
-    document.cookie = 'cookie_consent=' + value + '; max-age=31536000; path=/; SameSite=Lax';
+    document.cookie = 'cookie_consent=' + value + '; max-age=31536000; path=/; SameSite=Lax; Secure';
     if (banner) {
       banner.style.display = 'none';
-      banner.setAttribute('aria-modal', 'false');
+      banner.removeAttribute('aria-modal');
       document.getElementById('main-content')?.removeAttribute('inert');
     }
   }

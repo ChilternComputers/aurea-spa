@@ -2,6 +2,8 @@ const CACHE_NAME = 'aurea-spa-v3-20260314';
 const STATIC_ASSETS = [
   '/offline.html',
   '/favicon.svg',
+  '/fonts/cormorant-garamond-italic-latin.woff2',
+  '/fonts/dm-sans-normal-latin.woff2',
 ];
 
 self.addEventListener('install', (event) => {

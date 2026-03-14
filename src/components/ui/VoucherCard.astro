@@ -60,6 +60,7 @@ const { name, price, description, includes, popular = false } = Astro.props;
     href="/contact/"
     class={`btn-primary ${popular ? 'btn-outline-light' : 'btn-outline'}`}
     style="padding: 12px 24px; text-align: center;"
+    aria-label={`Purchase ${name} voucher`}
   >
     Purchase
   </a>
