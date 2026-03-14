@@ -12,7 +12,7 @@ interface Props {
   canonical?: string;
   ogImage?: string;
   noindex?: boolean;
-  schema?: Record<string, unknown>;
+  schema?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const { title, description, canonical, ogImage, noindex, schema } = Astro.props;
@@ -51,9 +51,12 @@ const { title, description, canonical, ogImage, noindex, schema } = Astro.props;
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
 
-    {schema && (
+    {schema && !Array.isArray(schema) && (
       <script type="application/ld+json" set:html={JSON.stringify(schema)} />
     )}
+    {schema && Array.isArray(schema) && schema.map((s) => (
+      <script type="application/ld+json" set:html={JSON.stringify(s)} />
+    ))}
   </head>
   <body>
     <a href="#main-content" class="skip-link" style="padding: 8px 16px;">

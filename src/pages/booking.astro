@@ -5,7 +5,12 @@ import Input from '@/components/ui/Input.astro';
 import { SITE } from '@/config';
 import { treatments } from '@/data/treatments';
 import { team } from '@/data/team';
-import { getWebPageSchema } from '@/lib/schemas';
+import { getWebPageSchema, getBreadcrumbSchema } from '@/lib/schemas';
+
+const breadcrumbs = getBreadcrumbSchema([
+  { name: 'Home', url: SITE.url },
+  { name: 'Booking', url: `${SITE.url}/booking/` },
+]);
 
 const treatmentNames = treatments.map((t) => t.name);
 const teamNames = team.map((m) => m.name);
@@ -15,11 +20,14 @@ const today = new Date().toISOString().split('T')[0];
 <Layout
   title="Booking"
   description="Book your appointment at AUREA. Choose your treatment, select your stylist, and reserve your time slot online."
-  schema={getWebPageSchema({
-    title: 'Book an Appointment — AUREA',
-    description: 'Book your luxury spa or salon appointment online.',
-    url: 'https://aurea-spa.pages.dev/booking/',
-  })}
+  schema={[
+    getWebPageSchema({
+      title: 'Book an Appointment — AUREA',
+      description: 'Book your luxury spa or salon appointment online.',
+      url: `${SITE.url}/booking/`,
+    }),
+    breadcrumbs,
+  ]}
 >
   <PageHero
     title="Book Your Visit"
@@ -43,19 +51,18 @@ const today = new Date().toISOString().split('T')[0];
       <form
         id="booking-form"
         style="display: flex; flex-direction: column; gap: 16px;"
-        novalidate
         data-reveal
       >
         <!-- Name row -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-          <Input label="First Name" name="firstName" required placeholder="First name" />
-          <Input label="Last Name" name="lastName" required placeholder="Last name" />
+          <Input label="First Name" name="firstName" required placeholder="First name" autocomplete="given-name" />
+          <Input label="Last Name" name="lastName" required placeholder="Last name" autocomplete="family-name" />
         </div>
 
         <!-- Contact row -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-          <Input label="Email" name="email" type="email" required placeholder="your@email.com" />
-          <Input label="Phone" name="phone" type="tel" required placeholder="07xxx xxx xxx" />
+          <Input label="Email" name="email" type="email" required placeholder="your@email.com" autocomplete="email" />
+          <Input label="Phone" name="phone" type="tel" required placeholder="07xxx xxx xxx" autocomplete="tel" />
         </div>
 
         <!-- Treatment — full width (names are long) -->
@@ -153,8 +160,10 @@ const today = new Date().toISOString().split('T')[0];
       if (!input.value.trim()) {
         valid = false;
         input.style.borderColor = 'var(--color-gold)';
+        input.setAttribute('aria-invalid', 'true');
       } else {
         input.style.borderColor = '';
+        input.removeAttribute('aria-invalid');
       }
     });
 
@@ -162,6 +171,7 @@ const today = new Date().toISOString().split('T')[0];
     if (emailField && emailField.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailField.value)) {
       valid = false;
       emailField.style.borderColor = 'var(--color-gold)';
+      emailField.setAttribute('aria-invalid', 'true');
     }
 
     if (!valid) {

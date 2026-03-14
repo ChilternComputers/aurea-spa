@@ -1,0 +1,3 @@
+Contact: mailto:hello@aureaspa.co.uk
+Preferred-Languages: en
+Canonical: https://aurea-spa.pages.dev/.well-known/security.txt

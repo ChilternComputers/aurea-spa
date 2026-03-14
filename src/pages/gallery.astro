@@ -3,19 +3,28 @@ import Layout from '@/layouts/Layout.astro';
 import PageHero from '@/components/sections/PageHero.astro';
 import BookingCTA from '@/components/sections/BookingCTA.astro';
 import { galleryImages, galleryCategoryLabels, type GalleryCategory } from '@/data/gallery';
-import { getWebPageSchema } from '@/lib/schemas';
+import { getWebPageSchema, getBreadcrumbSchema } from '@/lib/schemas';
+import { SITE } from '@/config';
 
 const categories = Object.keys(galleryCategoryLabels) as GalleryCategory[];
+
+const breadcrumbs = getBreadcrumbSchema([
+  { name: 'Home', url: SITE.url },
+  { name: 'Gallery', url: `${SITE.url}/gallery/` },
+]);
 ---
 
 <Layout
   title="Gallery"
   description="Browse our portfolio of hair transformations, skincare results, nail art, and our beautiful Marylebone salon interior."
-  schema={getWebPageSchema({
-    title: 'Gallery — AUREA',
-    description: 'See our work — hair, skin, nails, and salon interiors.',
-    url: 'https://aurea-spa.pages.dev/gallery/',
-  })}
+  schema={[
+    getWebPageSchema({
+      title: 'Gallery — AUREA',
+      description: 'See our work — hair, skin, nails, and salon interiors.',
+      url: `${SITE.url}/gallery/`,
+    }),
+    breadcrumbs,
+  ]}
 >
   <PageHero
     title="Gallery"
@@ -76,6 +85,8 @@ const categories = Object.keys(galleryCategoryLabels) as GalleryCategory[];
           >
             <img
               src={img.src}
+              srcset={`${img.src.replace('w=800', 'w=400')} 400w, ${img.src} 800w, ${img.src.replace('w=800', 'w=1200')} 1200w`}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               alt={img.alt}
               loading="lazy"
               decoding="async"
@@ -123,6 +134,16 @@ const categories = Object.keys(galleryCategoryLabels) as GalleryCategory[];
 
   <BookingCTA />
 </Layout>
+
+<style>
+  .gallery-item:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+  }
+  .gallery-item:focus-visible .gallery-overlay {
+    opacity: 1 !important;
+  }
+</style>
 
 <script>
   // Filter tabs

@@ -3,17 +3,26 @@ import Layout from '@/layouts/Layout.astro';
 import PageHero from '@/components/sections/PageHero.astro';
 import Divider from '@/components/ui/Divider.astro';
 import BookingCTA from '@/components/sections/BookingCTA.astro';
-import { getWebPageSchema } from '@/lib/schemas';
+import { getWebPageSchema, getBreadcrumbSchema } from '@/lib/schemas';
+import { SITE } from '@/config';
+
+const breadcrumbs = getBreadcrumbSchema([
+  { name: 'Home', url: SITE.url },
+  { name: 'About', url: `${SITE.url}/about/` },
+]);
 ---
 
 <Layout
   title="About"
   description="Discover the story behind AUREA — our philosophy, our founder, and our commitment to redefining beauty and wellness in Marylebone."
-  schema={getWebPageSchema({
-    title: 'About — AUREA',
-    description: 'The story behind AUREA luxury spa and salon.',
-    url: 'https://aurea-spa.pages.dev/about/',
-  })}
+  schema={[
+    getWebPageSchema({
+      title: 'About — AUREA',
+      description: 'The story behind AUREA luxury spa and salon.',
+      url: `${SITE.url}/about/`,
+    }),
+    breadcrumbs,
+  ]}
 >
   <PageHero
     title="Our Story"

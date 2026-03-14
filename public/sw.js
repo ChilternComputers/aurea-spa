@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aurea-spa-v1';
+const CACHE_NAME = 'aurea-spa-v2';
 const APP_SHELL = [
   '/',
   '/treatments/',

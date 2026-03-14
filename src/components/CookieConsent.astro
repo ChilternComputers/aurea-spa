@@ -34,12 +34,12 @@
   const acceptBtn = document.getElementById('cookie-accept');
   const declineBtn = document.getElementById('cookie-decline');
 
-  if (banner && !localStorage.getItem('cookie-consent')) {
+  if (banner && !document.cookie.split(';').some(c => c.trim().startsWith('cookie_consent='))) {
     banner.style.display = 'block';
   }
 
   function dismiss(value: string) {
-    localStorage.setItem('cookie-consent', value);
+    document.cookie = 'cookie_consent=' + value + '; max-age=31536000; path=/; SameSite=Lax';
     if (banner) banner.style.display = 'none';
   }
 

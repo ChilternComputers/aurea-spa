@@ -28,7 +28,7 @@ export const testimonials: Testimonial[] = [
     quote: 'Marcus has a gift. He understood exactly what I wanted before I could explain it. The best haircut I\'ve ever had — I actually look forward to my appointments now.',
     author: 'Nina T.',
     treatment: 'Signature Cut & Style',
-    rating: 5,
+    rating: 4,
   },
   {
     quote: 'Amara\'s nail art is on another level. I showed her a vague Pinterest board and she created something even better. I get compliments every single day.',
@@ -40,6 +40,6 @@ export const testimonials: Testimonial[] = [
     quote: 'The Full AUREA Experience was worth every penny. Four hours of pure bliss — sauna, massage, facial, nails, and the most beautiful afternoon tea. An absolute must for anyone who needs to reset.',
     author: 'Emma L.',
     treatment: 'The Full AUREA Experience',
-    rating: 5,
+    rating: 4,
   },
 ];

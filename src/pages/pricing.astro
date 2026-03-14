@@ -4,17 +4,28 @@ import PageHero from '@/components/sections/PageHero.astro';
 import BookingCTA from '@/components/sections/BookingCTA.astro';
 import Divider from '@/components/ui/Divider.astro';
 import { pricingMenu, spaPackages } from '@/data/pricing';
-import { getWebPageSchema } from '@/lib/schemas';
+import { getWebPageSchema, getBreadcrumbSchema, getFAQSchema } from '@/lib/schemas';
+import { SITE } from '@/config';
+import { faqs } from '@/data/faqs';
+
+const breadcrumbs = getBreadcrumbSchema([
+  { name: 'Home', url: SITE.url },
+  { name: 'Pricing', url: `${SITE.url}/pricing/` },
+]);
 ---
 
 <Layout
   title="Pricing"
   description="View the full AUREA price list — hair, facials, massage, nails, and wellness treatments. Transparent pricing, no hidden extras."
-  schema={getWebPageSchema({
-    title: 'Pricing — AUREA',
-    description: 'Full treatment price list for AUREA spa and salon.',
-    url: 'https://aurea-spa.pages.dev/pricing/',
-  })}
+  schema={[
+    getWebPageSchema({
+      title: 'Pricing — AUREA',
+      description: 'Full treatment price list for AUREA spa and salon.',
+      url: `${SITE.url}/pricing/`,
+    }),
+    breadcrumbs,
+    getFAQSchema(faqs),
+  ]}
 >
   <PageHero
     title="Pricing"
@@ -111,5 +122,52 @@ import { getWebPageSchema } from '@/lib/schemas';
     </div>
   </section>
 
+  <!-- FAQ Section -->
+  <section style="padding: clamp(60px, 8vw, 100px) 0;">
+    <div style="max-width: 800px; margin: 0 auto; padding: 0 24px;">
+      <div style="text-align: center; margin-bottom: 48px;" data-reveal>
+        <span class="eyebrow" style="display: block; margin-bottom: 16px;">FAQ</span>
+        <h2 class="font-heading text-charcoal" style="font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 300; margin: 0;">
+          Common Questions
+        </h2>
+        <div class="line-accent" style="margin: 20px auto 0;"></div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 0;" data-reveal>
+        {faqs.map((faq) => (
+          <details class="faq-item" style="border: 1px solid var(--color-border); border-bottom: none;">
+            <summary
+              class="font-body text-charcoal"
+              style="padding: 20px 24px; cursor: pointer; font-size: 0.95rem; font-weight: 500; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 16px;"
+            >
+              {faq.question}
+              <svg class="faq-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-sage)" stroke-width="2" stroke-linecap="round" style="flex-shrink: 0; transition: transform 0.3s ease;">
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </summary>
+            <div style="padding: 0 24px 20px;">
+              <p class="text-muted" style="font-size: 0.9rem; line-height: 1.8; margin: 0;">
+                {faq.answer}
+              </p>
+            </div>
+          </details>
+        ))}
+        <div style="border-bottom: 1px solid var(--color-border);"></div>
+      </div>
+    </div>
+  </section>
+
   <BookingCTA />
 </Layout>
+
+<style>
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq-item[open] .faq-chevron {
+    transform: rotate(180deg);
+  }
+  .faq-item summary:hover {
+    background: rgba(245, 240, 235, 0.5);
+  }
+</style>

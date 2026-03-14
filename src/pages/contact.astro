@@ -2,17 +2,25 @@
 import Layout from '@/layouts/Layout.astro';
 import PageHero from '@/components/sections/PageHero.astro';
 import { SITE } from '@/config';
-import { getWebPageSchema } from '@/lib/schemas';
+import { getWebPageSchema, getBreadcrumbSchema } from '@/lib/schemas';
+
+const breadcrumbs = getBreadcrumbSchema([
+  { name: 'Home', url: SITE.url },
+  { name: 'Contact', url: `${SITE.url}/contact/` },
+]);
 ---
 
 <Layout
   title="Contact"
   description="Get in touch with AUREA. Find our Marylebone salon, opening hours, phone number, email, and directions."
-  schema={getWebPageSchema({
-    title: 'Contact — AUREA',
-    description: 'Find and contact AUREA luxury spa and salon in Marylebone.',
-    url: 'https://aurea-spa.pages.dev/contact/',
-  })}
+  schema={[
+    getWebPageSchema({
+      title: 'Contact — AUREA',
+      description: 'Find and contact AUREA luxury spa and salon in Marylebone.',
+      url: `${SITE.url}/contact/`,
+    }),
+    breadcrumbs,
+  ]}
 >
   <PageHero
     title="Get in Touch"

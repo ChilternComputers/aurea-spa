@@ -3,17 +3,26 @@ import Layout from '@/layouts/Layout.astro';
 import PageHero from '@/components/sections/PageHero.astro';
 import VoucherCard from '@/components/ui/VoucherCard.astro';
 import { vouchers } from '@/data/gift-vouchers';
-import { getWebPageSchema } from '@/lib/schemas';
+import { getWebPageSchema, getBreadcrumbSchema } from '@/lib/schemas';
+import { SITE } from '@/config';
+
+const breadcrumbs = getBreadcrumbSchema([
+  { name: 'Home', url: SITE.url },
+  { name: 'Gift Vouchers', url: `${SITE.url}/gift-vouchers/` },
+]);
 ---
 
 <Layout
   title="Gift Vouchers"
   description="Give the gift of AUREA. Choose from four beautifully presented voucher tiers for spa treatments, hair styling, and wellness experiences."
-  schema={getWebPageSchema({
-    title: 'Gift Vouchers — AUREA',
-    description: 'Luxury gift vouchers for spa and beauty treatments.',
-    url: 'https://aurea-spa.pages.dev/gift-vouchers/',
-  })}
+  schema={[
+    getWebPageSchema({
+      title: 'Gift Vouchers — AUREA',
+      description: 'Luxury gift vouchers for spa and beauty treatments.',
+      url: `${SITE.url}/gift-vouchers/`,
+    }),
+    breadcrumbs,
+  ]}
 >
   <PageHero
     title="Gift Vouchers"

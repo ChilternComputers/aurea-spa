@@ -7,9 +7,10 @@ interface Props {
   placeholder?: string;
   options?: string[];
   min?: string;
+  autocomplete?: string;
 }
 
-const { label, name, type = 'text', required = false, placeholder = '', options, min } = Astro.props;
+const { label, name, type = 'text', required = false, placeholder = '', options, min, autocomplete } = Astro.props;
 const isTextarea = type === 'textarea';
 const isSelect = type === 'select';
 const inputId = `field-${name}`;
@@ -70,6 +71,7 @@ const focusClass = 'booking-field';
       required={required}
       placeholder={placeholder}
       min={min}
+      autocomplete={autocomplete}
       class={focusClass}
       style={fieldStyle}
     />
