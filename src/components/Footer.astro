@@ -31,10 +31,19 @@ import { navLinks } from '@/data/navigation';
     </div>
 
     <!-- Nav links inline -->
-    <nav aria-label="Footer navigation" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 32px; margin-bottom: 40px;">
+    <nav aria-label="Footer navigation" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 32px; margin-bottom: 32px;">
       {navLinks.map((link) => (
         <a href={link.href} class="footer-nav-link hover:text-cream">{link.label}</a>
       ))}
+    </nav>
+
+    <!-- Explore links -->
+    <nav aria-label="Explore more" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 28px; margin-bottom: 40px;">
+      <a href="/journal/" class="footer-nav-link hover:text-cream">Journal</a>
+      <a href="/virtual-tour/" class="footer-nav-link hover:text-cream">Virtual Tour</a>
+      <a href="/classes/" class="footer-nav-link hover:text-cream">Classes</a>
+      <a href="/shop/" class="footer-nav-link hover:text-cream">Shop</a>
+      <a href="/skin-quiz/" class="footer-nav-link hover:text-cream">Skin Quiz</a>
     </nav>
 
     <!-- Social -->

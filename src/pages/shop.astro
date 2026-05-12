@@ -1,0 +1,101 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHero from '@/components/sections/PageHero.astro';
+import BookingCTA from '@/components/sections/BookingCTA.astro';
+import ProductCard from '@/components/ui/ProductCard.astro';
+import { products, shopCategoryLabels, type ShopCategory } from '@/data/shop';
+import { getWebPageSchema, getBreadcrumbSchema, getProductSchema } from '@/lib/schemas';
+import { SITE } from '@/config';
+
+const categories = Object.keys(shopCategoryLabels) as ShopCategory[];
+
+const breadcrumbs = getBreadcrumbSchema([
+  { name: 'Home', url: SITE.url },
+  { name: 'Shop', url: `${SITE.url}/shop/` },
+]);
+
+const shopProducts = products.map((p) => ({
+  name: p.name,
+  price: p.price,
+  description: p.description,
+}));
+---
+
+<Layout
+  title="The Edit — Curated Skincare, Haircare & Wellness Products"
+  description="Shop our curated edit of premium skincare, haircare and wellness products at AUREA Marylebone."
+  schema={[
+    getWebPageSchema({
+      title: 'The Edit — AUREA',
+      description: 'Shop our curated edit of premium skincare, haircare and wellness products at AUREA Marylebone.',
+      url: `${SITE.url}/shop/`,
+    }),
+    breadcrumbs,
+    ...getProductSchema(shopProducts, `${SITE.url}/shop/`),
+  ]}
+>
+  <PageHero
+    title="The Edit"
+    subtitle="Curated Products"
+    description="Our hand-picked selection of premium skincare, haircare and wellness products — available in-salon and by phone."
+    image="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=1920&q=85&fit=crop&auto=format&fm=webp"
+    imageAlt="Luxury skincare products arranged on a marble surface"
+  />
+
+  <section style="padding: clamp(60px, 8vw, 100px) 0;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(24px, 4vw, 48px);">
+      <!-- Category tabs -->
+      <div
+        id="shop-tabs"
+        role="tablist"
+        aria-label="Product categories"
+        style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: clamp(40px, 5vw, 64px);"
+        data-reveal
+      >
+        <button role="tab" aria-selected="true" aria-controls="shop-grid" data-tab="all" class="tab-btn btn-primary btn-fill" style="padding: 8px 24px;" tabindex="0">
+          All
+        </button>
+        {categories.map((cat) => (
+          <button role="tab" aria-selected="false" aria-controls="shop-grid" data-tab={cat} class="tab-btn btn-primary btn-outline" style="padding: 8px 24px;" tabindex="-1">
+            {shopCategoryLabels[cat]}
+          </button>
+        ))}
+      </div>
+
+      <!-- Product grid -->
+      <div
+        id="shop-grid"
+        role="tabpanel"
+        aria-label="Products"
+        style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;"
+        class="lg:grid-cols-3 xl:grid-cols-4"
+      >
+        {products.map((p) => (
+          <div data-category={p.category} class="shop-item">
+            <ProductCard
+              name={p.name}
+              brand={p.brand}
+              description={p.description}
+              price={p.price}
+              image={p.image}
+              imageAlt={p.imageAlt}
+            />
+          </div>
+        ))}
+      </div>
+
+      <div style="text-align: center; margin-top: 64px; max-width: 560px; margin-left: auto; margin-right: auto;" data-reveal>
+        <p class="text-muted" style="font-size: 0.9rem; line-height: 1.8;">
+          All products are available in-salon or by calling <a href="tel:02079460321" style="color: var(--color-sage); text-decoration: underline; text-underline-offset: 3px;">{SITE.phone}</a>. Online ordering coming soon.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <BookingCTA />
+</Layout>
+
+<script>
+  import { initTabs } from '@/lib/tabs';
+  initTabs('.tab-btn', '.shop-item', 'data-tab', 'data-category');
+</script>

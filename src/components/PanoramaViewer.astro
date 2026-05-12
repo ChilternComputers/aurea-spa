@@ -1,0 +1,76 @@
+---
+interface Scene {
+  id: string;
+  title: string;
+  image: string;
+  pitch: number;
+  yaw: number;
+  hfov: number;
+}
+
+interface Props {
+  scenes: Scene[];
+  roomId: string;
+}
+
+const { scenes, roomId } = Astro.props;
+const viewerId = `panorama-${roomId}`;
+---
+
+<div style="position: relative;">
+  {scenes.length > 1 && (
+    <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;" role="tablist" aria-label="Viewpoints">
+      {scenes.map((scene, i) => (
+        <button
+          class="scene-btn btn-primary btn-sm"
+          data-viewer={viewerId}
+          data-scene-id={scene.id}
+          data-image={scene.image}
+          data-pitch={scene.pitch}
+          data-yaw={scene.yaw}
+          data-hfov={scene.hfov}
+          role="tab"
+          aria-selected={i === 0 ? 'true' : 'false'}
+          style={`padding: 6px 16px; font-size: 0.65rem; ${i === 0 ? 'background: var(--color-sage); color: var(--color-cream); border: 1px solid var(--color-sage);' : 'background: transparent; border: 1px solid var(--color-sage); color: var(--color-sage);'}`}
+        >
+          {scene.title}
+        </button>
+      ))}
+    </div>
+  )}
+
+  <div
+    id={viewerId}
+    class="panorama-container"
+    style="width: 100%; aspect-ratio: 16/9; background: var(--color-charcoal); position: relative; overflow: hidden;"
+    data-initial-image={scenes[0].image}
+    data-initial-pitch={scenes[0].pitch}
+    data-initial-yaw={scenes[0].yaw}
+    data-initial-hfov={scenes[0].hfov}
+    aria-label={`360-degree panoramic view — drag to explore`}
+    role="img"
+  >
+    <!-- Fallback static image shown before Pannellum loads or on error -->
+    <img
+      src={scenes[0].image}
+      alt={`${scenes[0].title} panoramic view`}
+      style="width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0;"
+      loading="lazy"
+      decoding="async"
+    />
+    <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3);">
+      <span style="color: var(--color-cream); font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; background: rgba(0,0,0,0.5); padding: 10px 20px;">
+        Drag to Explore
+      </span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .panorama-container {
+    cursor: grab;
+  }
+  .panorama-container:active {
+    cursor: grabbing;
+  }
+</style>

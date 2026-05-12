@@ -1,0 +1,209 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import BookingCTA from '@/components/sections/BookingCTA.astro';
+import ArticleCard from '@/components/ui/ArticleCard.astro';
+import { getCollection, render } from 'astro:content';
+import { getBreadcrumbSchema } from '@/lib/schemas';
+import { SITE } from '@/config';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('journal');
+  return posts.map((post) => ({
+    params: { slug: post.id.replace(/\.md$/, '') },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const formattedDate = post.data.date.toLocaleDateString('en-GB', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+
+const isoDate = post.data.date.toISOString().split('T')[0];
+
+// Related articles: same category, excluding current
+const allPosts = await getCollection('journal');
+const related = allPosts
+  .filter((p) => p.data.category === post.data.category && p.id !== post.id)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 2);
+
+const breadcrumbs = getBreadcrumbSchema([
+  { name: 'Home', url: SITE.url },
+  { name: 'Journal', url: `${SITE.url}/journal/` },
+  { name: post.data.title, url: `${SITE.url}/journal/${post.id.replace(/\.md$/, '')}/` },
+]);
+
+const blogPostSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  author: { '@type': 'Person', name: post.data.author },
+  datePublished: isoDate,
+  image: post.data.image,
+  publisher: {
+    '@type': 'Organization',
+    name: SITE.name,
+    url: SITE.url,
+    logo: { '@type': 'ImageObject', url: `${SITE.url}/og-image.jpg` },
+  },
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': `${SITE.url}/journal/${post.id.replace(/\.md$/, '')}/`,
+  },
+};
+---
+
+<Layout
+  title={post.data.title}
+  description={post.data.description}
+  schema={[blogPostSchema, breadcrumbs]}
+  preloadImage={post.data.image.replace('w=1200', 'w=800')}
+>
+  <!-- Hero image -->
+  <section style="position: relative; padding: clamp(140px, 18vw, 220px) 0 clamp(80px, 10vw, 120px); overflow: hidden;">
+    <div style="position: absolute; inset: 0; z-index: 0;">
+      <img
+        src={post.data.image.replace('w=1200', 'w=1920')}
+        srcset={`${post.data.image.replace('w=1200', 'w=800')} 800w, ${post.data.image} 1200w, ${post.data.image.replace('w=1200', 'w=1920')} 1920w`}
+        sizes="100vw"
+        alt={post.data.imageAlt}
+        width={1920}
+        height={1080}
+        fetchpriority="high"
+        loading="eager"
+        decoding="async"
+        style="width: 100%; height: 100%; object-fit: cover;"
+      />
+      <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(26,26,26,0.45) 0%, rgba(26,26,26,0.7) 100%);"></div>
+    </div>
+
+    <div style="position: relative; z-index: 1; text-align: center; max-width: 750px; margin: 0 auto; padding: 0 24px;">
+      <span class="eyebrow" style="display: block; margin-bottom: 16px; color: rgba(197, 165, 114, 0.85); text-shadow: 0 1px 6px rgba(0,0,0,0.3);">
+        {post.data.category}
+      </span>
+      <h1 style="margin: 0; color: #FFFFFF; text-shadow: 0 2px 16px rgba(0,0,0,0.4); font-size: clamp(2.5rem, 6vw, 4.5rem);">
+        {post.data.title}
+      </h1>
+    </div>
+  </section>
+
+  <!-- Metadata bar -->
+  <div style="border-bottom: 1px solid var(--color-border); padding: 20px 0;">
+    <div style="max-width: 680px; margin: 0 auto; padding: 0 24px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 24px;">
+      <span style="font-size: 0.82rem; color: var(--color-sage); font-weight: 500;">{post.data.author}</span>
+      <span style="width: 3px; height: 3px; border-radius: 50%; background: var(--color-border); align-self: center;"></span>
+      <time datetime={isoDate} style="font-size: 0.82rem; color: var(--color-muted);">{formattedDate}</time>
+      <span style="width: 3px; height: 3px; border-radius: 50%; background: var(--color-border); align-self: center;"></span>
+      <span style="font-size: 0.82rem; color: var(--color-muted);">{post.data.readTime}</span>
+    </div>
+  </div>
+
+  <!-- Article content -->
+  <article style="padding: clamp(48px, 6vw, 80px) 0;">
+    <div class="article-prose" style="max-width: 680px; margin: 0 auto; padding: 0 24px;" data-reveal>
+      <Content />
+    </div>
+  </article>
+
+  <!-- Related articles -->
+  {related.length > 0 && (
+    <section style="padding: 0 0 clamp(60px, 8vw, 100px);">
+      <div style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(24px, 4vw, 48px);">
+        <h2 style="text-align: center; margin: 0 0 40px;" data-reveal>You Might Also Enjoy</h2>
+        <div
+          style="display: grid; grid-template-columns: 1fr; gap: 32px; max-width: 800px; margin: 0 auto;"
+          class="md:grid-cols-2"
+          data-stagger-parent
+        >
+          {related.map((relPost) => (
+            <ArticleCard
+              title={relPost.data.title}
+              description={relPost.data.description}
+              author={relPost.data.author}
+              date={relPost.data.date}
+              category={relPost.data.category}
+              image={relPost.data.image}
+              imageAlt={relPost.data.imageAlt}
+              readTime={relPost.data.readTime}
+              slug={relPost.id.replace(/\.md$/, '')}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <BookingCTA />
+</Layout>
+
+<style>
+  .article-prose :global(h2) {
+    font-family: var(--font-heading);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-style: italic;
+    font-weight: 300;
+    margin: 48px 0 20px;
+    color: var(--color-charcoal);
+  }
+
+  .article-prose :global(h3) {
+    font-family: var(--font-heading);
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    font-weight: 400;
+    margin: 36px 0 16px;
+    color: var(--color-charcoal);
+  }
+
+  .article-prose :global(p) {
+    font-size: 1rem;
+    line-height: 1.85;
+    color: var(--color-muted);
+    margin-bottom: 24px;
+  }
+
+  .article-prose :global(strong) {
+    color: var(--color-charcoal);
+    font-weight: 600;
+  }
+
+  .article-prose :global(ul),
+  .article-prose :global(ol) {
+    padding-left: 24px;
+    margin-bottom: 24px;
+  }
+
+  .article-prose :global(li) {
+    font-size: 1rem;
+    line-height: 1.85;
+    color: var(--color-muted);
+    margin-bottom: 8px;
+  }
+
+  .article-prose :global(em) {
+    font-style: italic;
+  }
+
+  .article-prose :global(a) {
+    color: var(--color-sage);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.3s ease;
+  }
+
+  .article-prose :global(a:hover) {
+    color: var(--color-dark-sage);
+  }
+
+  .article-prose :global(blockquote) {
+    border-left: 2px solid var(--color-gold);
+    padding-left: 24px;
+    margin: 32px 0;
+    font-style: italic;
+  }
+</style>

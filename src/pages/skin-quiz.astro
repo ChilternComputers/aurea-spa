@@ -1,0 +1,299 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHero from '@/components/sections/PageHero.astro';
+import { questions, recommendations } from '@/data/skin-quiz';
+import { getWebPageSchema, getBreadcrumbSchema } from '@/lib/schemas';
+import { SITE } from '@/config';
+
+const breadcrumbs = getBreadcrumbSchema([
+  { name: 'Home', url: SITE.url },
+  { name: 'Skin Quiz', url: `${SITE.url}/skin-quiz/` },
+]);
+---
+
+<Layout
+  title="Personalised Skin Quiz — Find Your Treatment"
+  description="Take AUREA's personalised skin quiz and receive bespoke treatment recommendations tailored to your skin concerns and lifestyle."
+  schema={[
+    getWebPageSchema({
+      title: 'Personalised Skin Quiz — AUREA',
+      description: 'Take AUREA\'s personalised skin quiz and receive bespoke treatment recommendations tailored to your skin concerns and lifestyle.',
+      url: `${SITE.url}/skin-quiz/`,
+    }),
+    breadcrumbs,
+  ]}
+>
+  <PageHero
+    title="Your Skin Profile"
+    subtitle="Discover Your Treatment"
+    description="Answer four quick questions and we'll recommend the perfect treatments for you."
+    image="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=1920&q=85&fit=crop&auto=format&fm=webp"
+    imageAlt="Close-up of glowing, healthy skin"
+  />
+
+  <section style="padding: clamp(60px, 8vw, 100px) 0;">
+    <div style="max-width: 600px; margin: 0 auto; padding: 0 clamp(24px, 4vw, 48px);">
+
+      <!-- Progress bar -->
+      <div style="margin-bottom: 48px;" data-reveal>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span id="quiz-step" style="font-size: 0.75rem; color: var(--color-muted);">Question 1 of 4</span>
+          <span id="quiz-percent" style="font-size: 0.75rem; color: var(--color-muted);">25%</span>
+        </div>
+        <div style="height: 3px; background: var(--color-border); width: 100%; position: relative;">
+          <div id="quiz-progress" style="height: 100%; background: var(--color-gold); width: 25%; transition: width 0.4s ease;"></div>
+        </div>
+      </div>
+
+      <!-- Quiz container -->
+      <div id="quiz-container" data-reveal>
+        {questions.map((q, i) => (
+          <div
+            class="quiz-question"
+            data-question={q.id}
+            data-type={q.type}
+            style={`display: ${i === 0 ? 'block' : 'none'};`}
+          >
+            <h2 style="font-size: clamp(1.8rem, 4vw, 2.5rem); margin: 0 0 8px;">
+              {q.question}
+            </h2>
+            {q.subtitle && (
+              <p class="text-muted" style="font-size: 0.9rem; margin-bottom: 32px;">
+                {q.subtitle}
+              </p>
+            )}
+
+            <div style="display: grid; gap: 12px;">
+              {q.options.map((opt) => (
+                <button
+                  class="quiz-option"
+                  data-value={opt.value}
+                  data-tags={opt.tags.join(',')}
+                  type="button"
+                  style="display: block; width: 100%; text-align: left; padding: 16px 20px; border: 1px solid var(--color-border); background: var(--color-white); font-family: var(--font-body); font-size: 0.9rem; color: var(--color-charcoal); cursor: pointer; transition: all 0.3s ease;"
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Navigation buttons -->
+      <div id="quiz-nav" style="display: flex; justify-content: space-between; margin-top: 32px;" data-reveal>
+        <button id="quiz-back" class="btn-primary btn-outline btn-sm" type="button" style="visibility: hidden;">
+          Back
+        </button>
+        <button id="quiz-next" class="btn-primary btn-fill btn-sm" type="button" style="visibility: hidden;">
+          Next
+        </button>
+      </div>
+
+      <!-- Results -->
+      <div id="quiz-results" style="display: none;">
+        <div style="text-align: center; margin-bottom: 48px;">
+          <span class="eyebrow" style="display: block; margin-bottom: 16px;">Your Results</span>
+          <h2 style="margin: 0 0 16px;">Personalised Recommendations</h2>
+          <p class="text-muted" style="font-size: 0.92rem; max-width: 480px; margin: 0 auto; line-height: 1.8;">
+            Based on your answers, here are the treatments we think you'll love.
+          </p>
+        </div>
+
+        <div id="results-grid" style="display: grid; gap: 20px;"></div>
+
+        <div style="text-align: center; margin-top: 48px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+          <a href="/booking/" class="btn-primary btn-fill">
+            Book Your Treatment
+          </a>
+          <button id="quiz-retake" class="btn-primary btn-outline" type="button">
+            Retake Quiz
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script define:vars={{ questionsData: questions, recommendationsData: recommendations }}>
+  let currentStep = 0;
+  const totalSteps = questionsData.length;
+  const answers = {};
+
+  const questionEls = document.querySelectorAll('.quiz-question');
+  const progressBar = document.getElementById('quiz-progress');
+  const stepLabel = document.getElementById('quiz-step');
+  const percentLabel = document.getElementById('quiz-percent');
+  const backBtn = document.getElementById('quiz-back');
+  const nextBtn = document.getElementById('quiz-next');
+  const resultsDiv = document.getElementById('quiz-results');
+  const resultsGrid = document.getElementById('results-grid');
+  const quizContainer = document.getElementById('quiz-container');
+  const quizNav = document.getElementById('quiz-nav');
+  const retakeBtn = document.getElementById('quiz-retake');
+
+  function updateUI() {
+    questionEls.forEach((el, i) => {
+      el.style.display = i === currentStep ? 'block' : 'none';
+    });
+
+    const percent = Math.round(((currentStep + 1) / totalSteps) * 100);
+    progressBar.style.width = `${percent}%`;
+    stepLabel.textContent = `Question ${currentStep + 1} of ${totalSteps}`;
+    percentLabel.textContent = `${percent}%`;
+
+    backBtn.style.visibility = currentStep > 0 ? 'visible' : 'hidden';
+
+    const currentQ = questionsData[currentStep];
+    const hasAnswer = answers[currentQ.id] && (
+      Array.isArray(answers[currentQ.id]) ? answers[currentQ.id].length > 0 : true
+    );
+
+    if (currentStep === totalSteps - 1) {
+      nextBtn.textContent = 'See Results';
+      nextBtn.style.visibility = hasAnswer ? 'visible' : 'hidden';
+    } else {
+      nextBtn.textContent = 'Next';
+      nextBtn.style.visibility = hasAnswer ? 'visible' : 'hidden';
+    }
+
+    // Highlight selected options
+    const activeQuestion = questionEls[currentStep];
+    const options = activeQuestion.querySelectorAll('.quiz-option');
+    options.forEach((opt) => {
+      const val = opt.getAttribute('data-value');
+      const currentAnswer = answers[currentQ.id];
+      let isSelected = false;
+
+      if (Array.isArray(currentAnswer)) {
+        isSelected = currentAnswer.includes(val);
+      } else {
+        isSelected = currentAnswer === val;
+      }
+
+      if (isSelected) {
+        opt.style.borderColor = 'var(--color-gold)';
+        opt.style.background = 'rgba(197, 165, 114, 0.08)';
+        opt.style.fontWeight = '500';
+      } else {
+        opt.style.borderColor = 'var(--color-border)';
+        opt.style.background = 'var(--color-white)';
+        opt.style.fontWeight = '400';
+      }
+    });
+  }
+
+  // Option click handlers
+  document.querySelectorAll('.quiz-option').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const questionEl = btn.closest('.quiz-question');
+      const qId = questionEl.getAttribute('data-question');
+      const qType = questionEl.getAttribute('data-type');
+      const value = btn.getAttribute('data-value');
+
+      if (qType === 'multiple') {
+        if (!answers[qId]) answers[qId] = [];
+        const idx = answers[qId].indexOf(value);
+        if (idx > -1) answers[qId].splice(idx, 1);
+        else answers[qId].push(value);
+      } else {
+        answers[qId] = value;
+      }
+
+      updateUI();
+    });
+  });
+
+  nextBtn.addEventListener('click', () => {
+    if (currentStep < totalSteps - 1) {
+      currentStep++;
+      updateUI();
+    } else {
+      showResults();
+    }
+  });
+
+  backBtn.addEventListener('click', () => {
+    if (currentStep > 0) {
+      currentStep--;
+      updateUI();
+    }
+  });
+
+  retakeBtn.addEventListener('click', () => {
+    currentStep = 0;
+    Object.keys(answers).forEach((k) => delete answers[k]);
+    resultsDiv.style.display = 'none';
+    quizContainer.style.display = 'block';
+    quizNav.style.display = 'flex';
+    updateUI();
+  });
+
+  function showResults() {
+    // Collect all tags from answers
+    const collectedTags = [];
+    questionsData.forEach((q) => {
+      const ans = answers[q.id];
+      if (!ans) return;
+      const values = Array.isArray(ans) ? ans : [ans];
+      values.forEach((val) => {
+        const opt = q.options.find((o) => o.value === val);
+        if (opt) collectedTags.push(...opt.tags);
+      });
+    });
+
+    // Score each recommendation
+    const scored = recommendationsData.map((rec) => {
+      const score = rec.tags.reduce((sum, tag) => sum + (collectedTags.includes(tag) ? 1 : 0), 0);
+      return { ...rec, score };
+    });
+
+    scored.sort((a, b) => b.score - a.score);
+    const top3 = scored.slice(0, 3);
+
+    resultsGrid.innerHTML = top3.map((rec, i) => `
+      <div style="padding: 28px; border: 1px solid var(--color-border); background: var(--color-white); transition: border-color 0.3s ease;"
+           class="result-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="width: 28px; height: 28px; border-radius: 50%; background: var(--color-gold); color: var(--color-charcoal); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 600; flex-shrink: 0;">
+              ${i + 1}
+            </span>
+            <h3 style="font-family: var(--font-heading); font-size: 1.25rem; font-weight: 400; font-style: italic; margin: 0;">
+              ${rec.treatmentName}
+            </h3>
+          </div>
+          <span style="font-size: 1rem; font-weight: 600; color: var(--color-sage); white-space: nowrap; margin-left: 16px;">
+            £${rec.price}
+          </span>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--color-muted); line-height: 1.75; margin-bottom: 12px;">
+          ${rec.reason}
+        </p>
+        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--color-border); padding-top: 12px;">
+          <span style="font-size: 0.78rem; color: var(--color-muted);">${rec.duration}</span>
+          <a href="${rec.href}" style="font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; color: var(--color-sage); text-decoration: none;">
+            Book →
+          </a>
+        </div>
+      </div>
+    `).join('');
+
+    quizContainer.style.display = 'none';
+    quizNav.style.display = 'none';
+    resultsDiv.style.display = 'block';
+  }
+
+  updateUI();
+</script>
+
+<style>
+  .quiz-option:hover {
+    border-color: var(--color-sage) !important;
+  }
+
+  .quiz-option:focus-visible {
+    outline: 2px solid var(--color-sage);
+    outline-offset: 2px;
+  }
+</style>

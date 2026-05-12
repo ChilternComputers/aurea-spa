@@ -2,6 +2,7 @@ import { SITE } from '@/config';
 import { testimonials } from '@/data/testimonials';
 import type { Treatment } from '@/data/treatments';
 import type { TeamMember } from '@/data/team';
+import type { ClassItem } from '@/data/classes';
 
 const MONTHS: Record<string, string> = {
   January: '01', February: '02', March: '03', April: '04',
@@ -156,11 +157,14 @@ export function getFAQSchema(faqs: { question: string; answer: string }[]) {
   };
 }
 
-export function getProductSchema(vouchers: { name: string; price: number; description: string }[]) {
-  return vouchers.map((v) => ({
+export function getProductSchema(
+  items: { name: string; price: number; description: string }[],
+  pageUrl = `${SITE.url}/gift-vouchers/`,
+) {
+  return items.map((v) => ({
     '@context': 'https://schema.org',
     '@type': 'Product',
-    name: `${v.name} Gift Voucher`,
+    name: v.name,
     description: v.description,
     brand: { '@type': 'Brand', name: SITE.name },
     offers: {
@@ -168,8 +172,39 @@ export function getProductSchema(vouchers: { name: string; price: number; descri
       price: String(v.price),
       priceCurrency: 'GBP',
       availability: 'https://schema.org/InStock',
-      url: `${SITE.url}/gift-vouchers/`,
+      url: pageUrl,
     },
+  }));
+}
+
+export function getEventSchema(classes: ClassItem[]) {
+  return classes.map((c) => ({
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: c.name,
+    description: c.description,
+    performer: { '@type': 'Person', name: c.instructor },
+    location: {
+      '@type': 'Place',
+      name: SITE.name,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: SITE.address.street,
+        addressLocality: SITE.address.area,
+        addressRegion: SITE.address.city,
+        postalCode: SITE.address.postcode,
+        addressCountry: 'GB',
+      },
+    },
+    offers: {
+      '@type': 'Offer',
+      price: String(c.price),
+      priceCurrency: 'GBP',
+      availability: 'https://schema.org/InStock',
+      url: `${SITE.url}/classes/`,
+    },
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    organizer: { '@type': 'Organization', name: SITE.name, url: SITE.url },
   }));
 }
 

@@ -2,6 +2,7 @@
 import Layout from '@/layouts/Layout.astro';
 import PageHero from '@/components/sections/PageHero.astro';
 import VoucherCard from '@/components/ui/VoucherCard.astro';
+import GiftPreview from '@/components/sections/GiftPreview.astro';
 import { vouchers } from '@/data/gift-vouchers';
 import { getWebPageSchema, getBreadcrumbSchema, getProductSchema } from '@/lib/schemas';
 import { SITE } from '@/config';
@@ -22,7 +23,7 @@ const breadcrumbs = getBreadcrumbSchema([
       url: `${SITE.url}/gift-vouchers/`,
     }),
     breadcrumbs,
-    ...getProductSchema(vouchers),
+    ...getProductSchema(vouchers.map((v) => ({ ...v, name: `${v.name} Gift Voucher` }))),
   ]}
 >
   <PageHero
@@ -62,4 +63,6 @@ const breadcrumbs = getBreadcrumbSchema([
       </div>
     </div>
   </section>
+
+  <GiftPreview />
 </Layout>

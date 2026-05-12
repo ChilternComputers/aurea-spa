@@ -1,0 +1,68 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHero from '@/components/sections/PageHero.astro';
+import BookingCTA from '@/components/sections/BookingCTA.astro';
+import PanoramaViewer from '@/components/PanoramaViewer.astro';
+import { tourRooms } from '@/data/virtual-tour';
+import { getWebPageSchema, getBreadcrumbSchema } from '@/lib/schemas';
+import { SITE } from '@/config';
+
+const breadcrumbs = getBreadcrumbSchema([
+  { name: 'Home', url: SITE.url },
+  { name: 'Virtual Tour', url: `${SITE.url}/virtual-tour/` },
+]);
+
+const totalViewpoints = tourRooms.reduce((sum, room) => sum + room.scenes.length, 0);
+---
+
+<Layout
+  title="360° Virtual Tour of AUREA Luxury Spa"
+  description="Take a 360-degree virtual tour of AUREA luxury spa in Marylebone. Explore our treatment rooms, wellness zone and styling studio."
+  schema={[
+    getWebPageSchema({
+      title: 'Virtual Tour — AUREA',
+      description: 'Take a 360-degree virtual tour of AUREA luxury spa in Marylebone. Explore our treatment rooms, wellness zone and styling studio.',
+      url: `${SITE.url}/virtual-tour/`,
+    }),
+    breadcrumbs,
+  ]}
+>
+  <PageHero
+    title="Virtual Tour"
+    subtitle="Step Inside"
+    description="Explore AUREA from anywhere. Drag to look around each room and discover our luxury spaces."
+    image="https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=1920&q=85&fit=crop&auto=format&fm=webp"
+    imageAlt="AUREA spa reception with warm lighting and natural textures"
+  />
+
+  <!-- Stats bar -->
+  <div style="border-bottom: 1px solid var(--color-border); padding: 20px 0;">
+    <div style="max-width: 600px; margin: 0 auto; display: flex; justify-content: center; gap: 24px; flex-wrap: wrap;">
+      <span style="font-size: 0.82rem; color: var(--color-muted);">{tourRooms.length} rooms</span>
+      <span style="width: 3px; height: 3px; border-radius: 50%; background: var(--color-border); align-self: center;"></span>
+      <span style="font-size: 0.82rem; color: var(--color-muted);">{totalViewpoints} viewpoints</span>
+      <span style="width: 3px; height: 3px; border-radius: 50%; background: var(--color-border); align-self: center;"></span>
+      <span style="font-size: 0.82rem; color: var(--color-muted);">Drag to explore</span>
+    </div>
+  </div>
+
+  <!-- Room sections -->
+  {tourRooms.map((room, i) => (
+    <section style={`padding: clamp(60px, 8vw, 100px) 0; ${i % 2 === 1 ? 'background: #FAFAF8;' : ''}`}>
+      <div style="max-width: 1000px; margin: 0 auto; padding: 0 clamp(24px, 4vw, 48px);">
+        <div style="margin-bottom: 32px;" data-reveal>
+          <span class="eyebrow" style="display: block; margin-bottom: 12px;">Room {i + 1}</span>
+          <h2 style="margin: 0 0 16px;">{room.name}</h2>
+          <p class="text-muted" style="font-size: 0.95rem; max-width: 600px; line-height: 1.8;">
+            {room.description}
+          </p>
+        </div>
+        <div data-reveal>
+          <PanoramaViewer scenes={room.scenes} roomId={room.scenes[0].id.split('-')[0] + '-' + i} />
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <BookingCTA />
+</Layout>

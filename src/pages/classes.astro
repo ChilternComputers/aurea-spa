@@ -1,0 +1,116 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import PageHero from '@/components/sections/PageHero.astro';
+import BookingCTA from '@/components/sections/BookingCTA.astro';
+import ClassCard from '@/components/ui/ClassCard.astro';
+import Timetable from '@/components/sections/Timetable.astro';
+import { classes, classCategoryLabels, classPacks, type ClassCategory } from '@/data/classes';
+import { getWebPageSchema, getBreadcrumbSchema, getEventSchema } from '@/lib/schemas';
+import { SITE } from '@/config';
+
+const categories = Object.keys(classCategoryLabels) as ClassCategory[];
+
+const breadcrumbs = getBreadcrumbSchema([
+  { name: 'Home', url: SITE.url },
+  { name: 'Classes', url: `${SITE.url}/classes/` },
+]);
+---
+
+<Layout
+  title="Yoga, Pilates & Wellness Classes in Marylebone"
+  description="Join yoga, pilates, sound bath and breathwork classes at AUREA Marylebone. Expert-led sessions for all levels, from £18."
+  schema={[
+    getWebPageSchema({
+      title: 'Classes & Workshops — AUREA',
+      description: 'Join yoga, pilates, sound bath and breathwork classes at AUREA Marylebone. Expert-led sessions for all levels, from £18.',
+      url: `${SITE.url}/classes/`,
+    }),
+    breadcrumbs,
+    ...getEventSchema(classes),
+  ]}
+>
+  <PageHero
+    title="Classes & Workshops"
+    subtitle="Move, Breathe, Restore"
+    description="Expert-led yoga, pilates, sound healing and skincare workshops in our intimate Marylebone studio."
+    image="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1920&q=85&fit=crop&auto=format&fm=webp"
+    imageAlt="Yoga class in a calm, candlelit studio"
+  />
+
+  <section style="padding: clamp(60px, 8vw, 100px) 0;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(24px, 4vw, 48px);">
+      <!-- Category tabs -->
+      <div
+        id="class-tabs"
+        role="tablist"
+        aria-label="Class categories"
+        style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: clamp(40px, 5vw, 64px);"
+        data-reveal
+      >
+        <button role="tab" aria-selected="true" aria-controls="class-grid" data-tab="all" class="tab-btn btn-primary btn-fill" style="padding: 8px 24px;" tabindex="0">
+          All
+        </button>
+        {categories.map((cat) => (
+          <button role="tab" aria-selected="false" aria-controls="class-grid" data-tab={cat} class="tab-btn btn-primary btn-outline" style="padding: 8px 24px;" tabindex="-1">
+            {classCategoryLabels[cat]}
+          </button>
+        ))}
+      </div>
+
+      <!-- Class grid -->
+      <div
+        id="class-grid"
+        role="tabpanel"
+        aria-label="Classes"
+        style="display: grid; grid-template-columns: 1fr; gap: 24px;"
+        class="md:grid-cols-2 lg:grid-cols-3"
+      >
+        {classes.map((c) => (
+          <div data-category={c.category} class="class-item">
+            <ClassCard
+              name={c.name}
+              description={c.description}
+              instructor={c.instructor}
+              duration={c.duration}
+              price={c.price}
+              image={c.image}
+              imageAlt={c.imageAlt}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Timetable />
+
+  <!-- Pricing note -->
+  <section style="padding: clamp(40px, 5vw, 60px) 0;">
+    <div style="max-width: 700px; margin: 0 auto; padding: 0 clamp(24px, 4vw, 48px); text-align: center;" data-reveal>
+      <span class="eyebrow" style="display: block; margin-bottom: 16px;">Class Packs</span>
+      <div style="display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 24px;">
+        {classPacks.map((pack) => (
+          <div style="padding: 20px 32px; border: 1px solid var(--color-border); background: var(--color-white); text-align: center;">
+            <span class="font-heading" style="font-size: 1.3rem; font-style: italic; display: block; margin-bottom: 4px;">
+              {pack.name}
+            </span>
+            <span class="text-sage" style="font-size: 1.2rem; font-weight: 600; display: block; margin-bottom: 4px;">
+              &pound;{pack.price}
+            </span>
+            <span style="font-size: 0.75rem; color: var(--color-gold);">{pack.saving}</span>
+          </div>
+        ))}
+      </div>
+      <p class="text-muted" style="font-size: 0.88rem; line-height: 1.8;">
+        Class packs are valid for 3 months from purchase. <a href="/booking/" style="color: var(--color-sage); text-decoration: underline; text-underline-offset: 3px;">Book online</a> or call <a href="tel:02079460321" style="color: var(--color-sage); text-decoration: underline; text-underline-offset: 3px;">020 7946 0321</a>.
+      </p>
+    </div>
+  </section>
+
+  <BookingCTA />
+</Layout>
+
+<script>
+  import { initTabs } from '@/lib/tabs';
+  initTabs('.tab-btn', '.class-item', 'data-tab', 'data-category');
+</script>

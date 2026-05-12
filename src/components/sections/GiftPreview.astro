@@ -1,0 +1,170 @@
+---
+import { vouchers } from '@/data/gift-vouchers';
+---
+
+<section style="padding: clamp(60px, 8vw, 100px) 0; background: #FAFAF8;">
+  <div style="max-width: 1000px; margin: 0 auto; padding: 0 clamp(24px, 4vw, 48px);">
+    <div style="text-align: center; margin-bottom: clamp(40px, 5vw, 56px);" data-reveal>
+      <span class="eyebrow" style="display: block; margin-bottom: 16px;">Personalise Your Gift</span>
+      <h2 style="margin: 0 0 16px;">Preview Your Gift Card</h2>
+      <p class="text-muted" style="font-size: 0.92rem; max-width: 480px; margin: 0 auto; line-height: 1.8;">
+        See how your gift will look. Choose a voucher tier and add a personal message.
+      </p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr; gap: 48px; align-items: start;" class="md:grid-cols-2" data-reveal>
+      <!-- Form -->
+      <div>
+        <div style="margin-bottom: 24px;">
+          <label for="gift-tier" style="display: block; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500; margin-bottom: 8px; color: var(--color-muted);">
+            Voucher Tier
+          </label>
+          <select
+            id="gift-tier"
+            style="width: 100%; padding: 12px 16px; border: 1px solid var(--color-border); font-family: var(--font-body); font-size: 0.9rem; background: var(--color-white); color: var(--color-charcoal); appearance: auto;"
+          >
+            {vouchers.map((v) => (
+              <option value={v.name} data-price={v.price}>
+                {v.name} — £{v.price}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+          <label for="gift-recipient" style="display: block; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500; margin-bottom: 8px; color: var(--color-muted);">
+            Recipient Name
+          </label>
+          <input
+            type="text"
+            id="gift-recipient"
+            placeholder="e.g. Sophie"
+            maxlength="30"
+            style="width: 100%; padding: 12px 16px; border: 1px solid var(--color-border); font-family: var(--font-body); font-size: 0.9rem; background: var(--color-white); color: var(--color-charcoal);"
+          />
+        </div>
+
+        <div style="margin-bottom: 24px;">
+          <label for="gift-sender" style="display: block; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500; margin-bottom: 8px; color: var(--color-muted);">
+            Your Name
+          </label>
+          <input
+            type="text"
+            id="gift-sender"
+            placeholder="e.g. James"
+            maxlength="30"
+            style="width: 100%; padding: 12px 16px; border: 1px solid var(--color-border); font-family: var(--font-body); font-size: 0.9rem; background: var(--color-white); color: var(--color-charcoal);"
+          />
+        </div>
+
+        <div style="margin-bottom: 24px;">
+          <label for="gift-message" style="display: block; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500; margin-bottom: 8px; color: var(--color-muted);">
+            Personal Message
+          </label>
+          <textarea
+            id="gift-message"
+            rows="3"
+            placeholder="e.g. Happy birthday! You deserve a little luxury."
+            maxlength="120"
+            style="width: 100%; padding: 12px 16px; border: 1px solid var(--color-border); font-family: var(--font-body); font-size: 0.9rem; background: var(--color-white); color: var(--color-charcoal); resize: vertical;"
+          ></textarea>
+        </div>
+
+        <p style="font-size: 0.78rem; color: var(--color-muted); font-style: italic;">
+          Email delivery coming soon. Call <a href="tel:02079460321" style="color: var(--color-sage); text-decoration: underline; text-underline-offset: 3px;">020 7946 0321</a> to purchase.
+        </p>
+      </div>
+
+      <!-- Live preview card -->
+      <div>
+        <div
+          id="gift-card-preview"
+          style="background: linear-gradient(135deg, var(--color-sage) 0%, var(--color-dark-sage) 100%); padding: 40px 32px; aspect-ratio: 3/2; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;"
+          aria-label="Gift card preview"
+        >
+          <!-- Decorative corner -->
+          <div style="position: absolute; top: 0; right: 0; width: 80px; height: 80px; background: linear-gradient(135deg, transparent 50%, rgba(197,165,114,0.15) 50%);"></div>
+
+          <div>
+            <span class="font-heading" style="font-size: 1.2rem; letter-spacing: 0.3em; font-weight: 300; color: var(--color-cream); display: block; margin-bottom: 4px;">
+              AUREA
+            </span>
+            <span style="font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(245,240,235,0.5);">
+              Gift Voucher
+            </span>
+          </div>
+
+          <div>
+            <div style="margin-bottom: 16px;">
+              <span class="font-heading" id="preview-tier" style="font-size: 1.6rem; font-style: italic; color: var(--color-gold); display: block; line-height: 1.2;">
+                Petal
+              </span>
+              <span class="font-body" id="preview-value" style="font-size: 1.1rem; font-weight: 600; color: var(--color-cream);">
+                £50
+              </span>
+            </div>
+
+            <div style="border-top: 1px solid rgba(245,240,235,0.15); padding-top: 16px;">
+              <p id="preview-recipient" class="font-heading" style="font-size: 1rem; font-style: italic; color: var(--color-cream); margin-bottom: 4px;">
+                For: <span style="color: var(--color-gold);">your recipient</span>
+              </p>
+              <p id="preview-message" style="font-size: 0.78rem; color: rgba(245,240,235,0.6); font-style: italic; line-height: 1.6; min-height: 2.4em;">
+                Your personal message will appear here
+              </p>
+              <p id="preview-sender" style="font-size: 0.72rem; color: rgba(245,240,235,0.5); margin-top: 8px;">
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const tierSelect = document.getElementById('gift-tier') as HTMLSelectElement | null;
+  const recipientInput = document.getElementById('gift-recipient') as HTMLInputElement | null;
+  const senderInput = document.getElementById('gift-sender') as HTMLInputElement | null;
+  const messageInput = document.getElementById('gift-message') as HTMLTextAreaElement | null;
+
+  const previewTier = document.getElementById('preview-tier');
+  const previewValue = document.getElementById('preview-value');
+  const previewRecipient = document.getElementById('preview-recipient');
+  const previewMessage = document.getElementById('preview-message');
+  const previewSender = document.getElementById('preview-sender');
+
+  function updatePreview() {
+    if (!tierSelect || !previewTier || !previewValue || !previewRecipient || !previewMessage || !previewSender) return;
+
+    const selectedOption = tierSelect.options[tierSelect.selectedIndex];
+    previewTier.textContent = selectedOption.value;
+    previewValue.textContent = `£${selectedOption.getAttribute('data-price') || '50'}`;
+
+    const recipient = recipientInput?.value.trim() || 'your recipient';
+    previewRecipient.innerHTML = `For: <span style="color: var(--color-gold);">${recipient}</span>`;
+
+    const message = messageInput?.value.trim() || 'Your personal message will appear here';
+    previewMessage.textContent = message;
+
+    const sender = senderInput?.value.trim();
+    previewSender.textContent = sender ? `With love, ${sender}` : '';
+  }
+
+  tierSelect?.addEventListener('change', updatePreview);
+  recipientInput?.addEventListener('input', updatePreview);
+  senderInput?.addEventListener('input', updatePreview);
+  messageInput?.addEventListener('input', updatePreview);
+</script>
+
+<style>
+  #gift-card-preview {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: 2px solid var(--color-sage);
+    outline-offset: 2px;
+  }
+</style>

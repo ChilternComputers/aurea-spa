@@ -1,0 +1,68 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  author: string;
+  date: Date;
+  category: string;
+  image: string;
+  imageAlt: string;
+  readTime: string;
+  slug: string;
+}
+
+const { title, description, author, date, category, image, imageAlt, readTime, slug } = Astro.props;
+
+const formattedDate = date.toLocaleDateString('en-GB', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+---
+
+<article data-stagger-child data-category={category}>
+  <a href={`/journal/${slug}/`} style="display: block; text-decoration: none; color: inherit;" aria-label={`Read: ${title}`}>
+    <div class="img-zoom" style="aspect-ratio: 16/10; overflow: hidden; margin-bottom: 20px;">
+      <img
+        src={image.replace('w=1200', 'w=600')}
+        srcset={`${image.replace('w=1200', 'w=400')} 400w, ${image.replace('w=1200', 'w=600')} 600w`}
+        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        alt={imageAlt}
+        width={600}
+        height={375}
+        loading="lazy"
+        decoding="async"
+        style="width: 100%; height: 100%; object-fit: cover;"
+      />
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+      <span class="eyebrow" style="font-size: 0.6rem;">{category}</span>
+      <span style="width: 3px; height: 3px; border-radius: 50%; background: var(--color-border);"></span>
+      <span style="font-size: 0.75rem; color: var(--color-muted);">{readTime}</span>
+    </div>
+
+    <h3 class="font-heading article-title" style="font-size: 1.35rem; font-weight: 400; font-style: italic; margin: 0 0 10px; line-height: 1.3; transition: color 0.3s ease;">
+      {title}
+    </h3>
+
+    <p class="text-muted" style="font-size: 0.85rem; line-height: 1.75; margin-bottom: 16px;">
+      {description}
+    </p>
+
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <span style="font-size: 0.78rem; color: var(--color-sage); font-weight: 500;">{author}</span>
+      <span style="width: 3px; height: 3px; border-radius: 50%; background: var(--color-border);"></span>
+      <time datetime={date.toISOString().split('T')[0]} style="font-size: 0.75rem; color: var(--color-muted);">
+        {formattedDate}
+      </time>
+    </div>
+  </a>
+</article>
+
+<style>
+  article a:hover .article-title,
+  article a:focus-visible .article-title {
+    color: var(--color-sage) !important;
+  }
+</style>
