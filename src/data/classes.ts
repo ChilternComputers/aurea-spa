@@ -26,7 +26,7 @@ export const classes: ClassItem[] = [
     duration: '60 min',
     price: 22,
     category: 'yoga',
-    image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&q=85&fit=crop&auto=format&fm=webp',
+    image: '/images/unsplash/1544367567-0f2fcb009e0b.webp',
     imageAlt: 'Vinyasa yoga flow class in a calm studio setting',
   },
   {
@@ -36,7 +36,7 @@ export const classes: ClassItem[] = [
     duration: '75 min',
     price: 22,
     category: 'yoga',
-    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=85&fit=crop&auto=format&fm=webp',
+    image: '/images/unsplash/1506126613408-eca07ce68773.webp',
     imageAlt: 'Restorative yin yoga with soft lighting and candles',
   },
   {
@@ -46,7 +46,7 @@ export const classes: ClassItem[] = [
     duration: '50 min',
     price: 20,
     category: 'pilates',
-    image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&q=85&fit=crop&auto=format&fm=webp',
+    image: '/images/unsplash/1518611012118-696072aa579a.webp',
     imageAlt: 'Mat Pilates class with natural light',
   },
   {
@@ -56,7 +56,7 @@ export const classes: ClassItem[] = [
     duration: '60 min',
     price: 28,
     category: 'meditation',
-    image: 'https://images.unsplash.com/photo-1591291621164-2c6367723315?w=800&q=85&fit=crop&auto=format&fm=webp',
+    image: '/images/unsplash/1591291621164-2c6367723315.webp',
     imageAlt: 'Sound bath meditation with singing bowls and candles',
   },
   {
@@ -66,7 +66,7 @@ export const classes: ClassItem[] = [
     duration: '45 min',
     price: 18,
     category: 'meditation',
-    image: 'https://images.unsplash.com/photo-1508672019048-805c876b67e2?w=800&q=85&fit=crop&auto=format&fm=webp',
+    image: '/images/unsplash/1508672019048-805c876b67e2.webp',
     imageAlt: 'Guided breathwork session in a serene spa environment',
   },
   {
@@ -76,7 +76,7 @@ export const classes: ClassItem[] = [
     duration: '90 min',
     price: 45,
     category: 'workshops',
-    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&q=85&fit=crop&auto=format&fm=webp',
+    image: '/images/unsplash/1570172619644-dfd03ed5d881.webp',
     imageAlt: 'Skincare masterclass with professional products',
   },
 ];
