@@ -4,7 +4,7 @@ description: "How the seasons affect your scalp health, and what to do about it 
 author: "Marcus Chen"
 date: 2025-10-22
 category: "hair"
-image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&q=85&fit=crop&auto=format&fm=webp"
+image: "/images/journal/seasonal-scalp-care.webp"
 imageAlt: "Professional hair treatment in a luxury salon setting"
 readTime: "4 min read"
 featured: false

@@ -4,7 +4,7 @@ description: "A month-by-month guide to looking and feeling your absolute best o
 author: "Isabelle Laurent"
 date: 2026-01-18
 category: "guides"
-image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=1200&q=85&fit=crop&auto=format&fm=webp"
+image: "/images/journal/bridal-beauty-timeline.webp"
 imageAlt: "Bride with radiant skin and elegant hair styling"
 readTime: "7 min read"
 featured: true

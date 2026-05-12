@@ -4,7 +4,7 @@ description: "Why hydrated skin looks younger, how the moisture barrier works, a
 author: "Dr. Priya Sharma"
 date: 2025-11-14
 category: "skincare"
-image: "https://images.unsplash.com/photo-1596178065887-1198b6148b2b?w=1200&q=85&fit=crop&auto=format&fm=webp"
+image: "/images/journal/science-of-skin-hydration.webp"
 imageAlt: "Close-up of dewy, hydrated skin with natural lighting"
 readTime: "6 min read"
 featured: true

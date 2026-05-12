@@ -4,7 +4,7 @@ description: "Transform your morning routine from a rushed checklist into a grou
 author: "Isabelle Laurent"
 date: 2026-02-10
 category: "lifestyle"
-image: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=1200&q=85&fit=crop&auto=format&fm=webp"
+image: "/images/journal/mindful-beauty-rituals.webp"
 imageAlt: "Serene morning skincare ritual with natural light"
 readTime: "4 min read"
 featured: false

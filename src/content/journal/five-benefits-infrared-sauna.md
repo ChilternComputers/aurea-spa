@@ -4,7 +4,7 @@ description: "From detoxification to better sleep — discover why infrared saun
 author: "Elena Voss"
 date: 2025-12-03
 category: "wellness"
-image: "https://images.unsplash.com/photo-1591343395082-e120087004b4?w=1200&q=85&fit=crop&auto=format&fm=webp"
+image: "/images/journal/five-benefits-infrared-sauna.webp"
 imageAlt: "Warm wooden infrared sauna interior with soft lighting"
 readTime: "5 min read"
 featured: false

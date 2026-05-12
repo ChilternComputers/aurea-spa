@@ -4,7 +4,7 @@ description: "Everything you need to know about chemical peels — types, benefi
 author: "Dr. Priya Sharma"
 date: 2025-09-30
 category: "skincare"
-image: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=1200&q=85&fit=crop&auto=format&fm=webp"
+image: "/images/journal/understanding-chemical-peels.webp"
 imageAlt: "Professional skincare treatment with serums and tools"
 readTime: "5 min read"
 featured: false
